@@ -13,7 +13,8 @@ const STYLES: Record<VariantePresse, { titre: string; extrait: string }> = {
   },
 };
 
-const ACCELERATION = "motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]";
+/** Courbe des transitions de la carte ; la propriété arbitraire évite le conflit avec tailwindcss-animate */
+const ACCELERATION = "motion-safe:[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]";
 
 /** Teinte du titre au survol ou au focus de la carte, coupée sous prefers-reduced-motion */
 const TITRE_AU_SURVOL =
@@ -31,7 +32,7 @@ export default function TextePresse({ contenu, variante }: { contenu: ContenuCar
       <p className="text-[11px] font-light uppercase tracking-[0.3em] text-primary sm:text-xs">{contenu.media}</p>
       <h2
         lang={contenu.langueCitee ?? undefined}
-        className={`${styles.titre} font-light tracking-wide text-foreground ${contenu.lien ? TITRE_AU_SURVOL : ""}`}
+        className={`${styles.titre} text-balance font-light tracking-wide text-foreground ${contenu.lien ? TITRE_AU_SURVOL : ""}`}
       >
         {contenu.titre}
       </h2>
@@ -39,7 +40,7 @@ export default function TextePresse({ contenu, variante }: { contenu: ContenuCar
         <blockquote
           lang={contenu.citation.langue}
           cite={contenu.citation.source}
-          className={`${styles.extrait} font-light leading-relaxed text-foreground/80`}
+          className={`${styles.extrait} text-pretty font-light leading-relaxed text-foreground/80`}
         >
           <p>{contenu.citation.texte}</p>
         </blockquote>

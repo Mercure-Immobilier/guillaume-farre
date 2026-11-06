@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { createTranslator, type AbstractIntlMessages } from "next-intl";
 import { describe, expect, it } from "vitest";
-import { contenuDeCarte, LIEN_EXTERNE } from "@/components/presse/contenu";
+import { contenuDeCarte, insecables, LIEN_EXTERNE } from "@/components/presse/contenu";
 import { construireLibelles, type TraduirePresse } from "@/components/presse/libelles";
 import messagesEn from "@/messages/en.json";
 import messagesFr from "@/messages/fr.json";
@@ -20,6 +20,7 @@ const LANGUES_DU_SITE = ["fr", "en", "it"] as const;
 type LangueDuSite = (typeof LANGUES_DU_SITE)[number];
 const MESSAGES: Record<LangueDuSite, AbstractIntlMessages> = { fr: messagesFr, en: messagesEn, it: messagesIt };
 const racine = path.resolve(__dirname, "../..");
+const sansInsecables = (texte: string | undefined) => (texte ?? "").replace(/\u00a0/g, " ");
 
 function article(id: string): ArticlePresse {
   const trouve = ARTICLES_PRESSE.find((a) => a.id === id);
@@ -82,7 +83,7 @@ describe("QCEG MAG", () => {
   it.each(LANGUES_DU_SITE)("offre un extrait sur la page %s", (locale) => {
     const { principale } = versionsPourLangue(qceg, locale);
     expect(principale?.extrait?.length ?? 0).toBeGreaterThan(80);
-    expect(carte(qceg.id, locale).citation?.texte).toContain(principale?.extrait ?? "∅");
+    expect(sansInsecables(carte(qceg.id, locale).citation?.texte)).toContain(principale?.extrait ?? "∅");
   });
 
   it("ouvre depuis la page française la version française, les autres en liens secondaires", () => {
@@ -90,7 +91,7 @@ describe("QCEG MAG", () => {
     expect(lien?.href).toBe("https://qcegmag.com/fr/article-arts-de-vivre-lart-de-laisser-une-empreinte-guillaume-farre.html");
     expect(lien?.texte).toBe("Lire l'article");
     expect(lien?.nomAccessible).toBe(
-      "Lire l'article : L’Art de laisser une empreinte : l’art automobile de Guillaume Farré (s'ouvre dans un nouvel onglet)",
+      "Lire l'article : L’Art de laisser une empreinte\u00a0: l’art automobile de Guillaume Farré (s'ouvre dans un nouvel onglet)",
     );
     expect(citation?.langue).toBe("fr");
     expect(citation?.texte).toMatch(/^«\u00a0Et si la véritable richesse d’un voyage/);
@@ -178,6 +179,33 @@ describe("cartes", () => {
       alt: "« Biarritz », toile de Guillaume Farré",
     });
     expect(carte("qceg-2026-10", "en").toile.alt).toBe("“Traces”, a canvas by Guillaume Farré");
+  });
+});
+
+describe("typographie des citations", () => {
+  it("ne change que la nature des espaces des textes français", () => {
+    for (const a of ARTICLES_PRESSE) {
+      for (const version of a.versions) {
+        for (const texte of [version.titre, version.extrait ?? ""]) {
+          expect(sansInsecables(insecables(version.langue, texte))).toBe(texte);
+        }
+      }
+    }
+  });
+
+  it("tient la ponctuation française avec le mot qui la précède", () => {
+    expect(carte("qceg-2026-10", "fr").citation?.texte).toContain("derrière nous\u00a0? Pour");
+    const sudOuest = carte("sud-ouest-2026-06", "en").citation?.texte ?? "";
+    expect(sudOuest).toContain("Biarritz –\u00a0la ville");
+    expect(sudOuest).toContain("garage-atelier\u00a0–, le tableau");
+    expect(sudOuest).toContain("«\u00a0des méduses, ici un poisson\u00a0».\u00a0»");
+  });
+
+  it("laisse les textes anglais et chinois tels quels", () => {
+    const qceg = article("qceg-2026-10");
+    for (const version of qceg.versions.filter((v) => v.langue !== "fr")) {
+      expect(insecables(version.langue, version.extrait ?? "")).toBe(version.extrait);
+    }
   });
 });
 

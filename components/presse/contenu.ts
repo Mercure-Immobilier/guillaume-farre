@@ -9,11 +9,24 @@ import type { LibellesPresse } from "./libelles";
 
 /** Guillemets posés autour d'un extrait, dans l'usage de la langue citée */
 const GUILLEMETS: Record<LanguePresse, [string, string]> = {
-  fr: ["« ", " »"],
+  fr: ["«\u00a0", "\u00a0»"],
   it: ["«", "»"],
   en: ["“", "”"],
   zh: ["“", "”"],
 };
+
+/**
+ * Espaces insécables de la typographie française, posées à l'affichage pour qu'aucune ligne ne
+ * commence par « ? » ou « » » : seule la nature des espaces change, le texte relevé reste intact.
+ */
+export function insecables(langue: LanguePresse, texte: string): string {
+  if (langue !== "fr") return texte;
+  return texte
+    .replace(/ ([?!:;»])/g, "\u00a0$1")
+    .replace(/« /g, "«\u00a0")
+    .replace(/ ([–—])(?=[,.;:)])/g, "\u00a0$1")
+    .replace(/([–—]) (?=\p{L})/gu, "$1\u00a0");
+}
 
 /** Tout lien de la page ouvre le magazine dans un nouvel onglet, sans lui transmettre la page d'origine */
 export const LIEN_EXTERNE = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -47,7 +60,11 @@ export interface ContenuCarte {
 
 export function contenuDeCarte(article: ArticlePresse, locale: string, libelles: LibellesPresse): ContenuCarte {
   const { principale, autres } = versionsPourLangue(article, locale);
-  const titre = principale?.titre ?? (article.numero ? libelles.numero(article.numero) : article.media);
+  const titre = principale
+    ? insecables(principale.langue, principale.titre)
+    : article.numero
+      ? libelles.numero(article.numero)
+      : article.media;
   const invitation = principale?.langue === locale ? libelles.lire : principale ? libelles.lireEn(principale.langue) : "";
   const [ouvrant, fermant] = principale ? GUILLEMETS[principale.langue] : ["", ""];
 
@@ -57,7 +74,11 @@ export function contenuDeCarte(article: ArticlePresse, locale: string, libelles:
     langueCitee: principale && principale.langue !== locale ? principale.langue : null,
     citation:
       principale?.extrait != null
-        ? { langue: principale.langue, texte: `${ouvrant}${principale.extrait}${fermant}`, source: principale.url }
+        ? {
+            langue: principale.langue,
+            texte: `${ouvrant}${insecables(principale.langue, principale.extrait)}${fermant}`,
+            source: principale.url,
+          }
         : null,
     dateIso: article.date,
     dateLisible: formaterDatePresse(article.date, locale),

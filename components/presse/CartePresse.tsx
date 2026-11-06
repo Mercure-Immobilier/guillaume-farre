@@ -13,23 +13,24 @@ interface Disposition {
 }
 
 /**
- * La vedette se lit comme une double page : la toile à gauche, le texte à droite dès 768 pixels.
- * Les cartes de la grille posent la toile au-dessus du texte.
+ * La vedette se lit comme une double page dès 1024 pixels : la toile à gauche, le texte à droite.
+ * En dessous, la toile passe au-dessus du texte, en paysage sur tablette pour rester large.
+ * Les cartes de la grille posent toujours la toile au-dessus du texte.
  */
 const DISPOSITIONS: Record<VariantePresse, Disposition> = {
   vedette: {
-    carte: "md:grid md:grid-cols-12 md:items-center md:gap-10 lg:gap-16",
-    image: "md:col-span-6 lg:col-span-7",
-    texte: "mt-8 sm:mt-10 md:col-span-6 md:mt-0 lg:col-span-5",
-    ratio: "aspect-[4/5]",
-    sizes: "(min-width: 1152px) 620px, (min-width: 768px) 55vw, 100vw",
+    carte: "lg:grid lg:grid-cols-12 lg:items-center lg:gap-16",
+    image: "lg:col-span-7",
+    texte: "mt-8 sm:mt-10 md:max-w-2xl lg:col-span-5 lg:mt-0",
+    ratio: "aspect-[4/5] md:aspect-[3/2] lg:aspect-[4/5]",
+    sizes: "(min-width: 1200px) 640px, (min-width: 1024px) 58vw, 100vw",
   },
   grille: {
     carte: "",
     image: "",
     texte: "mt-6 sm:mt-8",
     ratio: "aspect-[4/3]",
-    sizes: "(min-width: 1152px) 540px, (min-width: 768px) 50vw, 100vw",
+    sizes: "(min-width: 1200px) 540px, (min-width: 768px) 50vw, 100vw",
   },
 };
 

@@ -4,7 +4,7 @@ import { FILTRE_TOILE } from "@/lib/toiles-filter";
 
 /** Zoom lent de la toile au survol ou au focus de la carte, coupé sous prefers-reduced-motion */
 const ZOOM_AU_SURVOL =
-  "motion-safe:transition-transform motion-safe:duration-[1400ms] motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:scale-[1.04] motion-safe:group-focus-within:scale-[1.04]";
+  "motion-safe:transition-transform motion-safe:[transition-duration:1400ms] motion-safe:[transition-timing-function:cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:scale-[1.04] motion-safe:group-focus-within:scale-[1.04]";
 
 const FLOUS: Record<string, string> = blurPlaceholders;
 

@@ -552,14 +552,20 @@
   },
   "press": {
     "title": "Stampa",
-    "intro": "Gli articoli dedicati all'atelier di Tolosa e alle tracce che la Dino lascia sulla tela.",
     "read": "Leggi l'articolo",
+    "readIn": "Leggi l'articolo {language}",
+    "linkLabel": "{cta}: {title} (si apre in una nuova scheda)",
+    "newTab": "si apre in una nuova scheda",
+    "otherLanguages": "Altre lingue:",
     "print": "Edizione cartacea",
     "pages": "pagine {pages}",
     "by": "di {author}",
+    "issue": "Numero {issue}",
+    "canvasAlt": "«{name}», tela di Guillaume Farré",
     "lang": {
       "fr": "in francese",
       "en": "in inglese",
+      "it": "in italiano",
       "zh": "in cinese"
     }
   }

@@ -1,6 +1,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { createTranslator, type AbstractIntlMessages } from "next-intl";
 import { describe, expect, it } from "vitest";
+import { contenuDeCarte, LIEN_EXTERNE } from "@/components/presse/contenu";
+import { construireLibelles, type TraduirePresse } from "@/components/presse/libelles";
+import messagesEn from "@/messages/en.json";
+import messagesFr from "@/messages/fr.json";
+import messagesIt from "@/messages/it.json";
 import {
   ARTICLES_PRESSE,
   articlesParDate,
@@ -11,12 +17,21 @@ import {
 import { FILTRE_TOILE } from "../toiles-filter";
 
 const LANGUES_DU_SITE = ["fr", "en", "it"] as const;
+type LangueDuSite = (typeof LANGUES_DU_SITE)[number];
+const MESSAGES: Record<LangueDuSite, AbstractIntlMessages> = { fr: messagesFr, en: messagesEn, it: messagesIt };
 const racine = path.resolve(__dirname, "../..");
 
 function article(id: string): ArticlePresse {
   const trouve = ARTICLES_PRESSE.find((a) => a.id === id);
   if (!trouve) throw new Error(`article ${id} absent de lib/presse.ts`);
   return trouve;
+}
+
+/** Contenu d'une carte tel que la page l'affiche, avec les vrais textes de la langue demandée */
+function carte(id: string, locale: LangueDuSite) {
+  // Le traducteur typé de next-intl n'accepte pas de clé calculée : il se lit ici comme celui de la page
+  const t = createTranslator({ locale, messages: MESSAGES[locale], namespace: "press" }) as unknown as TraduirePresse;
+  return contenuDeCarte(article(id), locale, construireLibelles(t));
 }
 
 describe("articles de presse", () => {
@@ -54,6 +69,11 @@ describe("articles de presse", () => {
       }
     }
   });
+
+  it.each(LANGUES_DU_SITE)("n'écrit aucun sous-titre sous le titre de la page %s", (locale) => {
+    const press = MESSAGES[locale].press as AbstractIntlMessages;
+    expect(press).not.toHaveProperty("intro");
+  });
 });
 
 describe("QCEG MAG", () => {
@@ -62,42 +82,65 @@ describe("QCEG MAG", () => {
   it.each(LANGUES_DU_SITE)("offre un extrait sur la page %s", (locale) => {
     const { principale } = versionsPourLangue(qceg, locale);
     expect(principale?.extrait?.length ?? 0).toBeGreaterThan(80);
+    expect(carte(qceg.id, locale).citation?.texte).toContain(principale?.extrait ?? "∅");
   });
 
-  it("ouvre la version de la langue de la page, les autres en liens secondaires", () => {
-    const fr = versionsPourLangue(qceg, "fr");
-    expect(fr.principale?.langue).toBe("fr");
-    expect(fr.principale?.url).toContain("qcegmag.com/fr/");
-    expect(fr.principale?.extrait).toMatch(/^Et si la véritable richesse d’un voyage/);
-    expect(fr.autres.map((v) => v.langue)).toEqual(["en", "zh"]);
+  it("ouvre depuis la page française la version française, les autres en liens secondaires", () => {
+    const { lien, citation, autresLangues } = carte(qceg.id, "fr");
+    expect(lien?.href).toBe("https://qcegmag.com/fr/article-arts-de-vivre-lart-de-laisser-une-empreinte-guillaume-farre.html");
+    expect(lien?.texte).toBe("Lire l'article");
+    expect(lien?.nomAccessible).toBe(
+      "Lire l'article : L’Art de laisser une empreinte : l’art automobile de Guillaume Farré (s'ouvre dans un nouvel onglet)",
+    );
+    expect(citation?.langue).toBe("fr");
+    expect(citation?.texte).toMatch(/^«\u00a0Et si la véritable richesse d’un voyage/);
+    expect(citation?.texte).toMatch(/condition humaine\.\u00a0»$/);
+    expect(autresLangues?.liens.map((l) => [l.langue, l.texte])).toEqual([
+      ["en", "English"],
+      ["zh", "中文"],
+    ]);
+  });
 
-    const en = versionsPourLangue(qceg, "en");
-    expect(en.principale?.langue).toBe("en");
-    expect(en.principale?.extrait).toMatch(/^What if the most meaningful part of a journey were not its destination/);
-    expect(en.autres.map((v) => v.langue)).toEqual(["fr", "zh"]);
+  it("ouvre depuis la page anglaise la version anglaise", () => {
+    const { lien, citation, langueCitee } = carte(qceg.id, "en");
+    expect(lien?.href).toBe("https://qcegmag.com/living-arts-article-the-art-of-leaving-a-trace-guillaume-farre.html");
+    expect(lien?.texte).toBe("Read the article");
+    expect(langueCitee).toBeNull();
+    expect(citation?.texte).toMatch(/^“What if the most meaningful part of a journey were not its destination/);
   });
 
   it("renvoie la page italienne vers la version anglaise tant que le magazine n'en publie pas en italien", () => {
-    const it_ = versionsPourLangue(qceg, "it");
     expect(qceg.versions.some((v) => v.langue === "it")).toBe(false);
-    expect(it_.principale?.langue).toBe("en");
-    expect(it_.autres.map((v) => v.langue)).toEqual(["fr", "zh"]);
+    const { lien, citation, langueCitee, autresLangues } = carte(qceg.id, "it");
+    expect(lien?.langue).toBe("en");
+    expect(lien?.texte).toBe("Leggi l'articolo in inglese");
+    expect(langueCitee).toBe("en");
+    expect(citation?.langue).toBe("en");
+    expect(autresLangues?.liens.map((l) => l.langue)).toEqual(["fr", "zh"]);
   });
 });
 
 describe("Sud Ouest", () => {
   const sudOuest = article("sud-ouest-2026-06");
 
-  it("n'affiche que la première partie du titre", () => {
-    expect(sudOuest.versions[0].titre).toBe("Au festival Wheels and Waves, à Biarritz");
-    expect(sudOuest.versions[0].titre).not.toMatch(/pneus/);
+  it.each(LANGUES_DU_SITE)("affiche le titre réduit à sa première partie sur la page %s", (locale) => {
+    const { titre, lien } = carte(sudOuest.id, locale);
+    expect(titre).toBe("Au festival Wheels and Waves, à Biarritz");
+    expect(`${titre} ${lien?.nomAccessible}`).not.toMatch(/pneus/);
   });
 
   it.each(LANGUES_DU_SITE)("cite le premier paragraphe en français sur la page %s", (locale) => {
-    const { principale, autres } = versionsPourLangue(sudOuest, locale);
-    expect(principale?.langue).toBe("fr");
-    expect(principale?.extrait).toMatch(/^Allongé sur sa toile posée au sol, Guillaume Farré/);
-    expect(autres).toEqual([]);
+    const { lien, citation, autresLangues } = carte(sudOuest.id, locale);
+    expect(citation?.langue).toBe("fr");
+    expect(citation?.texte).toMatch(/^«\u00a0Allongé sur sa toile posée au sol, Guillaume Farré/);
+    expect(lien?.href).toContain("www.sudouest.fr/culture/");
+    expect(autresLangues).toBeNull();
+  });
+
+  it("signale aux pages anglaise et italienne que l'article est en français", () => {
+    expect(carte(sudOuest.id, "fr").lien?.texte).toBe("Lire l'article");
+    expect(carte(sudOuest.id, "en").lien?.texte).toBe("Read the article in French");
+    expect(carte(sudOuest.id, "it").lien?.texte).toBe("Leggi l'articolo in francese");
   });
 });
 
@@ -105,8 +148,36 @@ describe("ENZO", () => {
   it("reste une mention imprimée, sans lien ni extrait", () => {
     const enzo = article("enzo-32");
     expect(enzo.versions).toEqual([]);
-    expect(enzo.pages).toBe("68-69");
-    expect(versionsPourLangue(enzo, "fr").principale).toBeNull();
+    const fr = carte(enzo.id, "fr");
+    expect(fr.lien).toBeNull();
+    expect(fr.citation).toBeNull();
+    expect(fr.autresLangues).toBeNull();
+    expect(fr.titre).toBe("Numéro 32");
+    expect(fr.mentions).toEqual(["Édition imprimée, pages 68-69"]);
+    expect(carte(enzo.id, "en").titre).toBe("Issue 32");
+    expect(carte(enzo.id, "it").mentions).toEqual(["Edizione cartacea, pagine 68-69"]);
+  });
+});
+
+describe("cartes", () => {
+  it.each(LANGUES_DU_SITE)("trouvent tous leurs textes dans messages/%s.json", (locale) => {
+    for (const a of ARTICLES_PRESSE) {
+      const texte = JSON.stringify(carte(a.id, locale));
+      expect(texte).not.toMatch(/press\./);
+    }
+  });
+
+  it("ouvrent chaque article dans un nouvel onglet, sans transmettre la page d'origine", () => {
+    expect(LIEN_EXTERNE.target).toBe("_blank");
+    expect(LIEN_EXTERNE.rel.split(" ")).toContain("noopener");
+  });
+
+  it("décrivent la toile qui illustre l'article", () => {
+    expect(carte("sud-ouest-2026-06", "fr").toile).toEqual({
+      src: "/images/toiles/8.jpg",
+      alt: "« Biarritz », toile de Guillaume Farré",
+    });
+    expect(carte("qceg-2026-10", "en").toile.alt).toBe("“Traces”, a canvas by Guillaume Farré");
   });
 });
 

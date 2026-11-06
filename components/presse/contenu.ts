@@ -40,7 +40,7 @@ export interface LienVersion {
   nomAccessible: string;
 }
 
-/** Ce qu'une carte affiche, calculé pour la langue de la page */
+/** Contenu affiché par une carte, calculé pour la langue de la page */
 export interface ContenuCarte {
   media: string;
   titre: string;

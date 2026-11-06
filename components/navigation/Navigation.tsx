@@ -21,6 +21,7 @@ export default function Navigation() {
   const navLinks = [
     { href: "/galerie", label: t("photographies") },
     { href: "/toiles", label: t("toiles") },
+    { href: "/presse", label: t("presse") },
     { href: "/contact", label: t("contact") },
   ];
 

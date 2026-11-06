@@ -5,7 +5,8 @@
     "toiles": "Canvases",
     "histoire": "Story",
     "atelier": "Studio",
-    "contact": "Contact"
+    "contact": "Contact",
+    "presse": "Press"
   },
   "hero": {
     "origine": {
@@ -82,7 +83,8 @@
     "contact": "Contact",
     "faq": "FAQ",
     "terms": "Terms & Conditions",
-    "returns": "Returns & Exchanges"
+    "returns": "Returns & Exchanges",
+    "press": "Press"
   },
   "gallery": {
     "title": "Gallery",
@@ -449,7 +451,14 @@
       "title": "Guillaume Farré — Login",
       "description": "Admin access to the Guillaume Farré website."
     },
-    "galerieItemFallbackDescription": "{title} — Fine art photograph by Guillaume Farré"
+    "galerieItemFallbackDescription": "{title} — Fine art photograph by Guillaume Farré",
+    "press": {
+      "title": "Press",
+      "description": "Articles about Guillaume Farré and the canvases he paints with the wheels of his Ferrari: Sud Ouest, ENZO, QCEG MAG.",
+      "ogTitle": "Press | Guillaume Farré",
+      "ogDescription": "What the press has written about Guillaume Farré's work.",
+      "ogAlt": "Guillaume Farré press"
+    }
   },
   "vipCheckout": {
     "meta_title": "Payment — VIP Reservation",
@@ -540,5 +549,18 @@
     "loading": "Redirecting…",
     "available": "{count} available",
     "paymentError": "Payment error"
+  },
+  "press": {
+    "title": "Press",
+    "intro": "Articles about the Toulouse studio and the traces the Dino leaves on canvas.",
+    "read": "Read the article",
+    "print": "Print edition",
+    "pages": "pages {pages}",
+    "by": "by {author}",
+    "lang": {
+      "fr": "in French",
+      "en": "in English",
+      "zh": "in Chinese"
+    }
   }
 }

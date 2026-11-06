@@ -44,6 +44,8 @@ const nextConfig = {
       { source: '/:locale/boutique', destination: '/:locale/galerie', permanent: false },
       { source: '/:locale/panier', destination: '/:locale/galerie', permanent: false },
       { source: '/:locale/faq', destination: '/:locale/galerie', permanent: false },
+      // Ancienne page « Actualités » (articles fictifs de 2024-2025, retirée le 06/11/2026)
+      { source: '/:locale/actualites', destination: '/:locale/presse', permanent: true },
     ];
   },
   // Security + performance headers

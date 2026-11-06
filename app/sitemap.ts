@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/galerie', changeFrequency: 'weekly', priority: 0.9 },
     { path: '/toiles', changeFrequency: 'weekly', priority: 0.9 },
     { path: '/contact', changeFrequency: 'monthly', priority: 0.7 },
-    { path: '/faq', changeFrequency: 'monthly', priority: 0.6 },
+    { path: '/presse', changeFrequency: 'monthly', priority: 0.6 },
     { path: '/cgv', changeFrequency: 'monthly', priority: 0.3 },
     { path: '/mentions-legales', changeFrequency: 'monthly', priority: 0.3 },
     { path: '/politique-de-confidentialite', changeFrequency: 'monthly', priority: 0.3 },

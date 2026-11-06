@@ -5,7 +5,8 @@
     "toiles": "Toiles",
     "histoire": "Histoire",
     "atelier": "Atelier",
-    "contact": "Contact"
+    "contact": "Contact",
+    "presse": "Presse"
   },
   "hero": {
     "origine": {
@@ -82,7 +83,8 @@
     "contact": "Contact",
     "faq": "FAQ",
     "terms": "CGV",
-    "returns": "Retours & Échanges"
+    "returns": "Retours & Échanges",
+    "press": "Presse"
   },
   "gallery": {
     "title": "Galerie",
@@ -449,7 +451,14 @@
       "title": "Guillaume Farré — Connexion",
       "description": "Accès administration du site Guillaume Farré."
     },
-    "galerieItemFallbackDescription": "{title} — Photographie d'art par Guillaume Farré"
+    "galerieItemFallbackDescription": "{title} — Photographie d'art par Guillaume Farré",
+    "press": {
+      "title": "Presse",
+      "description": "Articles consacrés à Guillaume Farré et aux toiles qu'il peint avec les roues de sa Ferrari : Sud Ouest, ENZO, QCEG MAG.",
+      "ogTitle": "Presse | Guillaume Farré",
+      "ogDescription": "Ce que la presse a écrit sur le travail de Guillaume Farré.",
+      "ogAlt": "Presse Guillaume Farré"
+    }
   },
   "vipCheckout": {
     "meta_title": "Paiement — Réservation VIP",
@@ -540,5 +549,18 @@
     "loading": "Redirection…",
     "available": "{count} disponibles",
     "paymentError": "Erreur de paiement"
+  },
+  "press": {
+    "title": "Presse",
+    "intro": "Les articles consacrés à l'atelier de Toulouse et aux traces que la Dino laisse sur la toile.",
+    "read": "Lire l'article",
+    "print": "Édition imprimée",
+    "pages": "pages {pages}",
+    "by": "par {author}",
+    "lang": {
+      "fr": "en français",
+      "en": "en anglais",
+      "zh": "en chinois"
+    }
   }
 }

@@ -5,7 +5,8 @@
     "toiles": "Tele",
     "histoire": "Storia",
     "atelier": "Atelier",
-    "contact": "Contatto"
+    "contact": "Contatto",
+    "presse": "Stampa"
   },
   "hero": {
     "origine": {
@@ -82,7 +83,8 @@
     "contact": "Contatto",
     "faq": "FAQ",
     "terms": "CGV",
-    "returns": "Resi e cambi"
+    "returns": "Resi e cambi",
+    "press": "Stampa"
   },
   "gallery": {
     "title": "Galleria",
@@ -449,7 +451,14 @@
       "title": "Guillaume Farré — Accesso",
       "description": "Accesso amministrazione del sito Guillaume Farré."
     },
-    "galerieItemFallbackDescription": "{title} — Fotografia d'arte di Guillaume Farré"
+    "galerieItemFallbackDescription": "{title} — Fotografia d'arte di Guillaume Farré",
+    "press": {
+      "title": "Stampa",
+      "description": "Articoli su Guillaume Farré e sulle tele che dipinge con le ruote della sua Ferrari: Sud Ouest, ENZO, QCEG MAG.",
+      "ogTitle": "Stampa | Guillaume Farré",
+      "ogDescription": "Ciò che la stampa ha scritto sul lavoro di Guillaume Farré.",
+      "ogAlt": "Stampa Guillaume Farré"
+    }
   },
   "vipCheckout": {
     "meta_title": "Pagamento — Prenotazione VIP",
@@ -540,5 +549,18 @@
     "loading": "Reindirizzamento…",
     "available": "{count} disponibili",
     "paymentError": "Errore di pagamento"
+  },
+  "press": {
+    "title": "Stampa",
+    "intro": "Gli articoli dedicati all'atelier di Tolosa e alle tracce che la Dino lascia sulla tela.",
+    "read": "Leggi l'articolo",
+    "print": "Edizione cartacea",
+    "pages": "pagine {pages}",
+    "by": "di {author}",
+    "lang": {
+      "fr": "in francese",
+      "en": "in inglese",
+      "zh": "in cinese"
+    }
   }
 }

@@ -62,8 +62,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-muted-foreground hover:text-primary transition-colors font-light inline-block py-1 sm:py-0">
-                  {t("faq")}
+                <Link href="/presse" className="text-muted-foreground hover:text-primary transition-colors font-light inline-block py-1 sm:py-0">
+                  {t("press")}
                 </Link>
               </li>
             </ul>

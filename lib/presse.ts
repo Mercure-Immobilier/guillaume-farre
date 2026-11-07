@@ -45,8 +45,6 @@ export interface ToilePresse {
   /** Toile de Guillaume qui illustre la carte */
   src: string;
   nom: string;
-  largeur: number;
-  hauteur: number;
 }
 
 export interface ArticlePresse {
@@ -72,7 +70,10 @@ export const ARTICLES_PRESSE: ArticlePresse[] = [
     date: "2026-10-22",
     auteur: "Dawa Ma",
     pages: null,
-    toile: { src: "/images/toiles/19.jpg", nom: "Traces", largeur: 971, hauteur: 1950 },
+    toile: {
+      src: "/images/toiles/19.jpg",
+      nom: "Traces",
+    },
     versions: [
       {
         langue: "en",
@@ -104,7 +105,10 @@ export const ARTICLES_PRESSE: ArticlePresse[] = [
     date: "2026-06-06",
     auteur: "Stéphane Vacchiani",
     pages: null,
-    toile: { src: "/images/toiles/8.jpg", nom: "Biarritz", largeur: 1153, hauteur: 1154 },
+    toile: {
+      src: "/images/toiles/8.jpg",
+      nom: "Biarritz",
+    },
     versions: [
       {
         langue: "fr",
@@ -122,7 +126,10 @@ export const ARTICLES_PRESSE: ArticlePresse[] = [
     date: "2026-04",
     auteur: null,
     pages: "68-69",
-    toile: { src: "/images/toiles/11.jpg", nom: "Cavalino", largeur: 978, hauteur: 1952 },
+    toile: {
+      src: "/images/toiles/11.jpg",
+      nom: "Cavalino",
+    },
     versions: [],
   },
 ];

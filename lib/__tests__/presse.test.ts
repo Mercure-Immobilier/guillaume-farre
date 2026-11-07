@@ -232,7 +232,7 @@ describe("typographie des citations", () => {
 
 describe("rangement et dates", () => {
   it("range du plus récent au plus ancien, une date au mois valant le premier du mois", () => {
-    const toile = { src: "/images/toiles/1.jpg", nom: "Essai", largeur: 1, hauteur: 1 };
+    const toile = { src: "/images/toiles/1.jpg", nom: "Essai" };
     const base = { media: "M", numero: null, auteur: null, pages: "1", toile, versions: [] };
     const essai: ArticlePresse[] = [
       { ...base, id: "a", date: "2026-04" },

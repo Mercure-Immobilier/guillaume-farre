@@ -29,28 +29,37 @@ export default function Navigation() {
     <>
       {/* Barre de navigation sticky */}
       <nav
-        className={`sticky top-0 z-40 transition-all duration-700 ease-out ${
-          scrolled
-            ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm"
-            : "bg-background border-b border-transparent"
+        className={`sticky top-0 z-40 border-b transition-all duration-700 ease-out ${
+          scrolled ? "border-border/50 shadow-sm" : "border-transparent"
         }`}
       >
+        {/* Fond de l'en-tête, voilé et flouté au défilement. Le flou vit sur cette couche : porté par l'en-tête, un
+            backdrop-filter faisait de lui le bloc conteneur de ses descendants fixes, ce qui ramenait à 80 px de haut
+            le calque qui referme le sélecteur de langue au clic sur la page. */}
+        <div
+          aria-hidden="true"
+          className={`absolute inset-0 -z-10 transition-all duration-700 ease-out ${
+            scrolled ? "bg-background/80 backdrop-blur-md" : "bg-background"
+          }`}
+        />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <Link
               href="/"
-              className={`text-xl sm:text-2xl md:text-xl lg:text-2xl whitespace-nowrap font-extralight hover:text-primary transition-all duration-500 ${
+              className={`text-xl sm:text-2xl whitespace-nowrap font-extralight hover:text-primary transition-all duration-500 ${
                 scrolled ? "tracking-[0.05em]" : "tracking-[0.08em]"
               }`}
             >
               GUILLAUME FARRÉ
             </Link>
-            <div className="hidden md:flex items-center gap-5 lg:gap-10">
+            {/* Sous 1024 px, les liens se replient derrière le bouton Menu : déployés à 768 px, ils touchaient le nom
+                (3,8 px d'écart en français) et n'offraient au doigt que des cibles de 12 px de corps. */}
+            <div className="hidden lg:flex items-center gap-10">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-xs lg:text-sm font-light tracking-[0.1em] lg:tracking-[0.15em] uppercase hover:text-primary transition-colors duration-300 relative group ${
+                  className={`text-sm font-light tracking-[0.15em] uppercase hover:text-primary transition-colors duration-300 relative group ${
                     pathname === link.href ? "text-primary" : ""
                   }`}
                 >
@@ -64,7 +73,7 @@ export default function Navigation() {
               ))}
               <LanguageSwitcher />
             </div>
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <MobileNav />
             </div>
           </div>

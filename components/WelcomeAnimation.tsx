@@ -26,9 +26,23 @@ function deleteCookie(name: string) {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
 }
 
+// Position, course verticale et retard de chaque particule, tirés une fois pour toute la séquence. Tirés à chaque
+// rendu, ils changeaient au passage de « light » à « reveal » : chaque particule repartait vers un autre point.
+const PARTICLE_COUNT = 20;
+
+function drawParticles() {
+  return Array.from({ length: PARTICLE_COUNT }, () => ({
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    rise: -50 + Math.random() * 100,
+    delay: Math.random() * 500,
+  }));
+}
+
 export default function WelcomeAnimation() {
   const [showAnimation, setShowAnimation] = useState(false);
   const [phase, setPhase] = useState<"initial" | "light" | "reveal" | "done">("initial");
+  const [particles] = useState(drawParticles);
 
   useEffect(() => {
     // Vérifier si on doit jouer l'animation (flag set par login)
@@ -52,22 +66,37 @@ export default function WelcomeAnimation() {
         phase === "reveal" ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
+      {/* Voiles qui s'écartent, posés sous la lumière et le texte : rendus après eux, ils les couvraient pendant
+          toute la phase « light », le halo grandissait sans être vu. */}
+      <div
+        className={`absolute top-0 bottom-0 left-0 bg-black transition-transform duration-1000 ease-in-out ${
+          phase === "reveal" ? "-translate-x-full" : "translate-x-0"
+        }`}
+        style={{ width: "51%" }}
+      />
+      <div
+        className={`absolute top-0 bottom-0 right-0 bg-black transition-transform duration-1000 ease-in-out ${
+          phase === "reveal" ? "translate-x-full" : "translate-x-0"
+        }`}
+        style={{ width: "51%" }}
+      />
+
       {/* Particules dorées flottantes - Couleur primary (bronze) */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle, i) => (
           <div
             key={i}
-            className={`absolute w-1 h-1 rounded-full transition-all duration-[3000ms] ${
+            className={`absolute w-1 h-1 rounded-full transition-all duration-3000 ${
               phase === "light" || phase === "reveal" ? "opacity-100" : "opacity-0"
             }`}
             style={{
               backgroundColor: "rgba(196, 165, 112, 0.6)", // primary color
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
               transform: phase === "light" || phase === "reveal"
-                ? `translateY(${-50 + Math.random() * 100}px)`
+                ? `translateY(${particle.rise}px)`
                 : "translateY(0)",
-              transitionDelay: `${Math.random() * 500}ms`,
+              transitionDelay: `${particle.delay}ms`,
             }}
           />
         ))}
@@ -110,7 +139,7 @@ export default function WelcomeAnimation() {
           Bienvenue
         </p>
         <h1
-          className={`text-white text-3xl md:text-4xl font-light tracking-wider transition-all duration-700 ${
+          className={`text-white text-3xl md:text-4xl font-light tracking-wider text-center px-6 transition-all duration-700 ${
             phase === "light" || phase === "reveal"
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-4"
@@ -120,20 +149,6 @@ export default function WelcomeAnimation() {
           dans l'univers de Guillaume Farré
         </h1>
       </div>
-
-      {/* Voiles qui s'écartent */}
-      <div
-        className={`absolute top-0 bottom-0 left-0 bg-black transition-transform duration-1000 ease-in-out ${
-          phase === "reveal" ? "-translate-x-full" : "translate-x-0"
-        }`}
-        style={{ width: "51%" }}
-      />
-      <div
-        className={`absolute top-0 bottom-0 right-0 bg-black transition-transform duration-1000 ease-in-out ${
-          phase === "reveal" ? "translate-x-full" : "translate-x-0"
-        }`}
-        style={{ width: "51%" }}
-      />
     </div>
   );
 }

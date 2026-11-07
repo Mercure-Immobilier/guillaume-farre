@@ -64,6 +64,17 @@ async function pageRendue(locale: LangueDuSite): Promise<Document> {
 /** Texte lu à l'écran, espaces insécables comprises comme des espaces */
 const texteLu = (el: Element | null) => (el?.textContent ?? "").replace(/ /g, " ");
 
+const classesDe = (el: Element | null) => (el?.getAttribute("class") ?? "").split(/\s+/).filter(Boolean);
+
+/** Marge intérieure haute (t) ou basse (b) en pixels, lue dans les classes p-, py-, pt- ou pb- sans préfixe d'écran */
+function margeInterieure(classes: string[], cote: "t" | "b"): number {
+  const valeur = (prefixe: string) => {
+    const classe = classes.find((c) => c.startsWith(`${prefixe}-`) && /^\d+(\.\d+)?$/.test(c.slice(prefixe.length + 1)));
+    return classe ? Number(classe.slice(prefixe.length + 1)) * 4 : null;
+  };
+  return valeur(`p${cote}`) ?? valeur("py") ?? valeur("p") ?? 0;
+}
+
 /** Taille en pixels d'une classe de police Tailwind (text-xs, sm:text-[11px]…), null pour toute autre classe */
 const TAILLES_TAILWIND: Record<string, number> = { xs: 12, sm: 14, base: 16, lg: 18, xl: 20, "2xl": 24 };
 function taillePolice(classe: string): number | null {
@@ -188,6 +199,20 @@ describe("page Presse rendue", () => {
       expect(carte.getAttribute("class")?.split(/\s+/)).toContain("relative");
       expect(etires).toHaveLength(1);
       expect(texteLu(etires[0]).startsWith(invitation)).toBe(true);
+    }
+  });
+
+  it.each(LANGUES_DU_SITE)("donne à chaque autre langue une cible de 24 pixels bordée d'une marge hors du lien étiré (%s)", async (locale) => {
+    const page = await pageRendue(locale);
+    const liens = [...page.querySelectorAll("main article a")].filter((a) => !classesDe(a).includes("after:absolute"));
+    // QCEG MAG paraît en trois langues : chaque page en propose deux autres que celle de son lien principal
+    expect(liens.map(texteLu)).toHaveLength(2);
+    for (const lien of liens) {
+      expect(classesDe(lien)).toEqual(expect.arrayContaining(["inline-flex", "min-h-6", "min-w-6"]));
+      const rangee = classesDe(lien.parentElement);
+      expect(rangee).toEqual(expect.arrayContaining(["relative", "z-10"]));
+      expect(margeInterieure(rangee, "t")).toBeGreaterThanOrEqual(12);
+      expect(margeInterieure(rangee, "b")).toBeGreaterThanOrEqual(12);
     }
   });
 

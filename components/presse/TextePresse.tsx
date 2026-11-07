@@ -81,11 +81,21 @@ function LienPrincipal({ lien }: { lien: LienVersion }) {
   );
 }
 
-/** Les autres versions de l'article restent cliquables au-dessus du lien qui couvre la carte */
+/**
+ * Rangée des autres langues, posée au-dessus du lien qui couvre la carte. Sa marge intérieure de
+ * 12 pixels reste hors du lien étiré : un doigt posé à côté d'un lien de langue n'ouvre pas l'article
+ * principal.
+ */
+const RANGEE_DES_LANGUES = "relative z-10 mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 py-3";
+
+/** Cible de 24 × 24 pixels au moins pour chaque lien de langue (règle 2.5.8 des WCAG 2.2) */
+const CIBLE_DE_LANGUE = "inline-flex min-h-6 min-w-6 items-center justify-center px-1.5";
+
+/** Les autres versions de l'article, chacune ouverte dans un nouvel onglet */
 function AutresLangues({ libelle, liens }: { libelle: string; liens: LienVersion[] }) {
   return (
-    <p className="relative z-10 mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs font-light text-muted-foreground">
-      <span>{libelle}</span>
+    <p className={`${RANGEE_DES_LANGUES} text-xs font-light text-muted-foreground`}>
+      <span className="mr-1">{libelle}</span>
       {liens.map((lien) => (
         <a
           key={lien.href}
@@ -94,7 +104,7 @@ function AutresLangues({ libelle, liens }: { libelle: string; liens: LienVersion
           lang={lien.langue}
           hrefLang={lien.langue}
           aria-label={lien.nomAccessible}
-          className="underline decoration-border underline-offset-4 hover:text-foreground focus-visible:text-foreground"
+          className={`${CIBLE_DE_LANGUE} underline decoration-border underline-offset-4 hover:text-foreground focus-visible:text-foreground`}
         >
           {lien.texte}
         </a>

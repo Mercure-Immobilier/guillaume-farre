@@ -108,7 +108,7 @@ export const ARTICLES_PRESSE: ArticlePresse[] = [
     versions: [
       {
         langue: "fr",
-        url: "https://www.sudouest.fr/culture/au-festival-wheels-and-waves-a-biarritz-guillaume-farre-laisse-sa-trace-de-pneus-29339456.php",
+        url: "https://www.sudouest.fr/culture/au-festival-wheels-and-waves-a-biarritz-29339456.php",
         titre: "Au festival Wheels and Waves, à Biarritz",
         extrait:
           "Allongé sur sa toile posée au sol, Guillaume Farré donne l’impression de nager sur son œuvre. Bleu comme l’océan qui embrasse Biarritz – la ville de son garage-atelier –, le tableau de près de 6 mètres réunit « des méduses, ici un poisson ».",

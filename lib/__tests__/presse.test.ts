@@ -138,6 +138,16 @@ describe("Sud Ouest", () => {
     expect(autresLangues).toBeNull();
   });
 
+  it("ouvre l'adresse courte de l'article, que Sud Ouest redirige vers sa page", () => {
+    expect(sudOuest.versions.map((v) => v.url)).toEqual([
+      "https://www.sudouest.fr/culture/au-festival-wheels-and-waves-a-biarritz-29339456.php",
+    ]);
+    for (const locale of LANGUES_DU_SITE) {
+      const { lien, citation } = carte(sudOuest.id, locale);
+      expect(`${lien?.href} ${citation?.source}`).not.toMatch(/pneu/i);
+    }
+  });
+
   it("signale aux pages anglaise et italienne que l'article est en français", () => {
     expect(carte(sudOuest.id, "fr").lien?.texte).toBe("Lire l'article");
     expect(carte(sudOuest.id, "en").lien?.texte).toBe("Read the article in French");

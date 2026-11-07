@@ -216,6 +216,20 @@ describe("page Presse rendue", () => {
     }
   });
 
+  it.each(LANGUES_DU_SITE)("étire les cartes de la grille sur leur rangée, la toile comblant l'écart (%s)", async (locale) => {
+    const page = await pageRendue(locale);
+    const [, ...grille] = [...page.querySelectorAll("main article")];
+    expect(grille.length).toBeGreaterThan(0);
+    for (const carte of grille) {
+      // L'élément de la grille (ScrollReveal) prend la hauteur de la rangée ; la carte la sienne
+      expect(classesDe(carte.parentElement)).toContain("h-full");
+      expect(classesDe(carte)).toEqual(expect.arrayContaining(["flex", "flex-col", "h-full"]));
+      const cadre = carte.querySelector("img")?.parentElement ?? null;
+      expect(classesDe(cadre)).toContain("grow");
+      expect(classesDe(cadre?.parentElement ?? null)).toEqual(expect.arrayContaining(["flex", "flex-col", "grow"]));
+    }
+  });
+
   it.each(LANGUES_DU_SITE)("écrit le nom du média dans la couleur du texte, à 12 pixels au moins (%s)", async (locale) => {
     const page = await pageRendue(locale);
     const medias = [...page.querySelectorAll("main article")].map((carte) => carte.querySelector("p"));

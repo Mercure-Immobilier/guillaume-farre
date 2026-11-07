@@ -57,7 +57,7 @@ export default function DarkEntry() {
     <div className="fixed inset-0 z-[200]">
       {/* Porte gauche */}
       <div
-        className={`absolute top-0 left-0 w-1/2 h-full transition-transform duration-[1500ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
+        className={`absolute top-0 left-0 w-1/2 h-full transition-transform duration-1500 ease-in-out ${
           phase === "opening" ? "-translate-x-full" : "translate-x-0"
         }`}
         style={{
@@ -89,7 +89,7 @@ export default function DarkEntry() {
 
       {/* Porte droite */}
       <div
-        className={`absolute top-0 right-0 w-1/2 h-full transition-transform duration-[1500ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
+        className={`absolute top-0 right-0 w-1/2 h-full transition-transform duration-1500 ease-in-out ${
           phase === "opening" ? "translate-x-full" : "translate-x-0"
         }`}
         style={{

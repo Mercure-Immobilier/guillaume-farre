@@ -57,7 +57,7 @@ export default function WelcomeAnimation() {
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className={`absolute w-1 h-1 rounded-full transition-all duration-[3000ms] ${
+            className={`absolute w-1 h-1 rounded-full transition-all duration-3000 ${
               phase === "light" || phase === "reveal" ? "opacity-100" : "opacity-0"
             }`}
             style={{

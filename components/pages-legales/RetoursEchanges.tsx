@@ -29,6 +29,45 @@ function CartePoints({ points, symbole, cadre }: { points: readonly Texte[]; sym
   );
 }
 
+function EtapesDeRetour({ etapes }: { etapes: PageRetours["procedure"]["etapes"] }) {
+  return (
+    <div className="space-y-6">
+      {etapes.map((etape, i) => (
+        <div key={etape.titre} className="bg-muted/30 border border-border rounded-lg p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <span className="text-2xl">{i + 1}</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-medium mb-2">{etape.titre}</h3>
+              <p className="text-muted-foreground">
+                <TexteLegal texte={etape.texte} classes={TEXTE} />
+              </p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CarteContact({ contact }: { contact: PageRetours["contact"] }) {
+  return (
+    <section className="bg-card border border-border rounded-xl p-4 sm:p-8 text-center">
+      <h3 className="text-xl sm:text-2xl font-light mb-4 sm:mb-6">{contact.titre}</h3>
+      <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8">{contact.texte}</p>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="mailto:contact@guillaumefarre.com" className={`${BOUTON} bg-black hover:bg-gray-900 text-white`}>
+          📧 {contact.ecrire}
+        </a>
+        <Link href="/faq" className={`${BOUTON} border-2 border-border hover:border-primary text-foreground`}>
+          📋 {contact.faq}
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 export default function RetoursEchanges({ page }: { page: PageRetours }) {
   return (
     <main className="min-h-screen">
@@ -56,23 +95,7 @@ export default function RetoursEchanges({ page }: { page: PageRetours }) {
 
           <section className="mb-12">
             <h2 className={TITRE_DE_SECTION}>{page.procedure.titre}</h2>
-            <div className="space-y-6">
-              {page.procedure.etapes.map((etape, i) => (
-                <div key={etape.titre} className="bg-muted/30 border border-border rounded-lg p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl">{i + 1}</span>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-medium mb-2">{etape.titre}</h3>
-                      <p className="text-muted-foreground">
-                        <TexteLegal texte={etape.texte} classes={TEXTE} />
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <EtapesDeRetour etapes={page.procedure.etapes} />
           </section>
 
           <section className="mb-12">
@@ -90,18 +113,7 @@ export default function RetoursEchanges({ page }: { page: PageRetours }) {
             </div>
           </section>
 
-          <section className="bg-card border border-border rounded-xl p-4 sm:p-8 text-center">
-            <h3 className="text-xl sm:text-2xl font-light mb-4 sm:mb-6">{page.contact.titre}</h3>
-            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8">{page.contact.texte}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="mailto:contact@guillaumefarre.com" className={`${BOUTON} bg-black hover:bg-gray-900 text-white`}>
-                📧 {page.contact.ecrire}
-              </a>
-              <Link href="/faq" className={`${BOUTON} border-2 border-border hover:border-primary text-foreground`}>
-                📋 {page.contact.faq}
-              </Link>
-            </div>
-          </section>
+          <CarteContact contact={page.contact} />
         </div>
       </div>
     </main>

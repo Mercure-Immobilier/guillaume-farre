@@ -11,7 +11,6 @@ import ScrollToTopOnNav from '@/components/ScrollToTopOnNav'
  */
 
 import SmoothScroll from '@/components/SmoothScroll'
-const WelcomeAnimation = dynamic(() => import('@/components/WelcomeAnimation'), { ssr: false })
 const PageProgressBar = dynamic(() => import('@/components/PageProgressBar'), { ssr: false })
 const BackToTop = dynamic(() => import('@/components/BackToTop'), { ssr: false })
 const CookieConsent = dynamic(() => import('@/components/CookieConsent'), { ssr: false })
@@ -25,16 +24,14 @@ const ImageProtection = dynamic(() => import('@/components/ImageProtection'), { 
 
 interface ClientShellProps {
   isVipVisitor: boolean
-  isPreLaunch: boolean
   children: React.ReactNode
 }
 
-export default function ClientShell({ isVipVisitor, isPreLaunch, children }: ClientShellProps) {
+export default function ClientShell({ isVipVisitor, children }: ClientShellProps) {
   return (
     <>
       <ScrollToTopOnNav />
       {!isVipVisitor && <PageProgressBar />}
-      {!isVipVisitor && !isPreLaunch && <WelcomeAnimation />}
 
       <SmoothScroll />
       <div className="flex-1">

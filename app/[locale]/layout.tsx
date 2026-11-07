@@ -117,7 +117,7 @@ export default async function RootLayout({
       <body className="flex flex-col min-h-screen">
         <NextIntlClientProvider messages={messages}>
             <AdminWrapper>
-              <ClientShell isVipVisitor={isVipVisitor} isPreLaunch={isPreLaunch}>
+              <ClientShell isVipVisitor={isVipVisitor}>
                 {children}
               </ClientShell>
               {!isVipVisitor && !isPreLaunch && <Footer />}

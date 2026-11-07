@@ -52,7 +52,7 @@ export default function MobileNav() {
       <button
         ref={boutonRef}
         onClick={() => setIsOpen((ouvert) => !ouvert)}
-        className="md:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 z-50"
+        className="lg:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 z-50"
         aria-label="Menu"
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
@@ -68,7 +68,7 @@ export default function MobileNav() {
             {/* Mobile Menu Overlay : au-dessus des bandeaux fixes de la page (cookies, retour en haut) */}
             {isOpen && (
               <div
-                className="fixed inset-0 bg-black/50 z-[60] md:hidden"
+                className="fixed inset-0 bg-black/50 z-[60] lg:hidden"
                 onClick={fermer}
                 aria-hidden="true"
               />
@@ -84,7 +84,7 @@ export default function MobileNav() {
               role="dialog"
               aria-modal="true"
               aria-label="Menu"
-              className={`fixed top-0 right-0 h-full w-[85vw] max-w-xs bg-background border-l border-border z-[70] transform duration-300 md:hidden shadow-2xl ${
+              className={`fixed top-0 right-0 h-full w-[85vw] max-w-xs bg-background border-l border-border z-[70] transform duration-300 lg:hidden shadow-2xl ${
                 isOpen
                   ? "visible translate-x-0 transition-transform"
                   : "invisible translate-x-full transition-[transform,visibility]"

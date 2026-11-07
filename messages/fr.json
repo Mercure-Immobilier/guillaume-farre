@@ -75,6 +75,8 @@
     "welcomeSignature": "Guillaume"
   },
   "footer": {
+    "navTitle": "Navigation",
+    "infoTitle": "Informations",
     "rights": "© {year} Guillaume Farré. Tous droits réservés.",
     "legal": "Mentions légales",
     "privacy": "Politique de confidentialité",
@@ -552,14 +554,20 @@
   },
   "press": {
     "title": "Presse",
-    "intro": "Les articles consacrés à l'atelier de Toulouse et aux traces que la Dino laisse sur la toile.",
     "read": "Lire l'article",
+    "readIn": "Lire l'article {language}",
+    "linkLabel": "{cta} : {title} (s'ouvre dans un nouvel onglet)",
+    "newTab": "s'ouvre dans un nouvel onglet",
+    "otherLanguages": "Autres langues :",
     "print": "Édition imprimée",
     "pages": "pages {pages}",
     "by": "par {author}",
+    "issue": "Numéro {issue}",
+    "canvasAlt": "« {name} », toile de Guillaume Farré",
     "lang": {
       "fr": "en français",
       "en": "en anglais",
+      "it": "en italien",
       "zh": "en chinois"
     }
   }

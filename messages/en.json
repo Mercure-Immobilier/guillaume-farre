@@ -75,6 +75,8 @@
     "welcomeSignature": "Guillaume"
   },
   "footer": {
+    "navTitle": "Navigation",
+    "infoTitle": "Information",
     "rights": "© {year} Guillaume Farré. All rights reserved.",
     "legal": "Legal notice",
     "privacy": "Privacy policy",
@@ -552,14 +554,20 @@
   },
   "press": {
     "title": "Press",
-    "intro": "Articles about the Toulouse studio and the traces the Dino leaves on canvas.",
     "read": "Read the article",
+    "readIn": "Read the article {language}",
+    "linkLabel": "{cta}: {title} (opens in a new tab)",
+    "newTab": "opens in a new tab",
+    "otherLanguages": "Other languages:",
     "print": "Print edition",
     "pages": "pages {pages}",
     "by": "by {author}",
+    "issue": "Issue {issue}",
+    "canvasAlt": "“{name}”, a canvas by Guillaume Farré",
     "lang": {
       "fr": "in French",
       "en": "in English",
+      "it": "in Italian",
       "zh": "in Chinese"
     }
   }

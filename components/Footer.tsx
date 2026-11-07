@@ -43,7 +43,7 @@ export default function Footer() {
               as="h3"
               className="text-lg font-light tracking-wide mb-6"
             >
-              Navigation
+              {t("navTitle")}
             </EditableText>
             <ul className="space-y-3 sm:space-y-3 text-sm">
               <li>
@@ -76,7 +76,7 @@ export default function Footer() {
               as="h3"
               className="text-lg font-light tracking-wide mb-6"
             >
-              Informations
+              {t("infoTitle")}
             </EditableText>
             <ul className="space-y-3 sm:space-y-3 text-sm">
               <li>

@@ -75,6 +75,8 @@
     "welcomeSignature": "Guillaume"
   },
   "footer": {
+    "navTitle": "Navigation",
+    "infoTitle": "Informations",
     "rights": "© {year} Guillaume Farré. Tous droits réservés.",
     "legal": "Mentions légales",
     "privacy": "Politique de confidentialité",

@@ -99,3 +99,7 @@ public/images/works/toiles/
 
 # Backup originaux toiles (avant crop)
 public/images/toiles/_backup_originals/
+
+# Sorties de Playwright
+test-results/
+playwright-report/

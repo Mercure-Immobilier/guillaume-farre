@@ -28,6 +28,7 @@ const AIR_MINIMAL = 24;
 /** Zone d'appui minimale d'un lien, règle 2.5.8 des WCAG 2.2 */
 const CIBLE_MINIMALE = 24;
 const CONTRASTE_MINIMAL = 4.5;
+const CONTRASTE_ECRIT = "4,5";
 const BOUTON_MENU = 'button[aria-label="Menu"]';
 
 test.beforeEach(async ({ context }) => {
@@ -174,7 +175,9 @@ test.describe("aucun débordement horizontal", () => {
       test(`${chemin} à ${largeur} px, au repos puis au défilement`, async ({ page }) => {
         await ouvrir(page, chemin, largeur, hauteur);
         const mesure = await largeurAuDefilement(page);
-        expect(mesure.largeurVue).toBe(largeur);
+        // La vue mesure la largeur demandée, moins une barre de défilement quand le navigateur en dessine une
+        expect(mesure.largeurVue).toBeLessThanOrEqual(largeur);
+        expect(mesure.largeurVue).toBeGreaterThan(largeur - 20);
         expect(mesure.largeurMax, `document plus large que l'écran ; dépassent : ${mesure.fautifs.join(", ")}`).toBeLessThanOrEqual(
           mesure.largeurVue,
         );
@@ -212,7 +215,7 @@ test.describe(`liens « Autres langues » de la page Presse : zone d'appui de ${
   }
 });
 
-test.describe(`lien actif du menu : ${CONTRASTE_MINIMAL} pour 1 au moins`, () => {
+test.describe(`lien actif du menu : ${CONTRASTE_ECRIT} pour 1 au moins`, () => {
   for (const { largeur, hauteur } of TAILLES) {
     test(`à ${largeur} px, contre le fond réel`, async ({ page }) => {
       await ouvrir(page, "/fr/presse", largeur, hauteur);

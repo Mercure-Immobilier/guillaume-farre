@@ -77,14 +77,17 @@ export default function MobileNav() {
             {/* Mobile Menu Panel - utilise design token au lieu de hardcoded.
                 Replié, il est invisible : son ombre ne borde plus la page à droite, ses liens ne prennent plus
                 le focus ni la voix d'un lecteur d'écran. À la fermeture, la visibilité bascule au terme de la
-                sortie ; à l'ouverture elle bascule aussitôt, ce qui laisse le focus y entrer sans attendre. */}
+                sortie ; à l'ouverture elle bascule aussitôt, ce qui laisse le focus y entrer sans attendre.
+                Il défile quand l'écran est plus bas que lui (téléphone en paysage) ; data-lenis-prevent laisse la
+                molette le faire défiler là où Lenis lisse le défilement de la page. */}
             <div
               id="mobile-menu"
               ref={panneauRef}
               role="dialog"
               aria-modal="true"
               aria-label="Menu"
-              className={`fixed top-0 right-0 h-full w-[85vw] max-w-xs bg-background border-l border-border z-[70] transform duration-300 lg:hidden shadow-2xl ${
+              data-lenis-prevent
+              className={`fixed top-0 right-0 h-full w-[85vw] max-w-xs overflow-y-auto overscroll-contain bg-background border-l border-border z-[70] transform duration-300 lg:hidden shadow-2xl ${
                 isOpen
                   ? "visible translate-x-0 transition-transform"
                   : "invisible translate-x-full transition-[transform,visibility]"

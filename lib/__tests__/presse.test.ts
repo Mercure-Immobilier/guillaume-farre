@@ -141,7 +141,7 @@ describe("Sud Ouest", () => {
     expect(`${titre} ${lien?.nomAccessible}`).not.toMatch(/pneus/);
   });
 
-  it.each(LANGUES_DU_SITE)("cite le premier paragraphe en français sur la page %s", (locale) => {
+  it.each(LANGUES_DU_SITE)("cite en français le début du premier paragraphe sur la page %s", (locale) => {
     const { lien, citation, autresLangues } = carte(sudOuest.id, locale);
     expect(citation?.langue).toBe("fr");
     expect(citation?.texte).toMatch(/^«\u00a0Allongé sur sa toile posée au sol, Guillaume Farré/);

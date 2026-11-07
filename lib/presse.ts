@@ -2,22 +2,26 @@
  * Articles de presse consacrés à Guillaume Farré.
  *
  * Chaque entrée a été relevée sur la publication elle-même le 06/11/2026 :
- * - QCEG MAG : titre (og:title), auteur, date et premier paragraphe du corps, sur les pages
- *   anglaise, française et chinoise. La version italienne qu'annonce le magazine
+ * - QCEG MAG : titre (og:title), auteur, date puis premier paragraphe entier du corps, sur les
+ *   pages anglaise, française puis chinoise. La version italienne qu'annonce le magazine
  *   (qcegmag.com/it/articolo-arts-del-vivere-larte-di-lasciare-una-traccia-guillaume-farre.html)
- *   répondait 404 ce jour-là : elle n'est pas listée, la page italienne du site renvoie donc
- *   à la version anglaise, version par défaut du magazine. À ajouter dès qu'elle répondra ;
- * - Sud Ouest : auteur et date de la page de l'article, premier paragraphe relevé dans le
- *   navigateur (le site refuse les robots). Seule la première partie du titre est reprise,
- *   à la demande de Raoul le 06/11/2026 ;
- * - ENZO : numéro et pages d'après le fichier transmis par l'artiste
- *   (« 032ENZO_068_069_GUILLAUME_FARRE_YA », « ENZO_32_2026_04 ») ; parution papier, sans lien ni texte.
+ *   répondait 404 les 6 et 7 novembre 2026 : elle n'est pas listée, la page italienne du site
+ *   renvoie donc à la version anglaise, version par défaut du magazine. À ajouter dès qu'elle
+ *   répondra ;
+ * - Sud Ouest : auteur, date puis début du premier paragraphe (ses deux premières phrases sur
+ *   quatre), relevés sur la page de l'article, que le site sert aussi à curl. Seule la première
+ *   partie du titre est reprise, à la demande de Raoul le 06/11/2026 ; l'adresse courte, sans la
+ *   fin du titre, redirige vers l'article (vérifié le 07/11/2026) ;
+ * - ENZO : numéro puis pages d'après le fichier des pages 68-69 transmis par l'artiste
+ *   (« 032ENZO_068_069_GUILLAUME_FARRE_YA », « ENZO_32_2026_04 ») ; parution papier sans version
+ *   en ligne, dont le texte n'a pas été relevé : la carte reste sans lien ni extrait.
  *
  * Un extrait est une citation exacte : il se recopie sans retouche ni traduction, les guillemets
  * étant posés à l'affichage. Chaque carte montre une toile de Guillaume, les photos de presse
  * restant la propriété de leurs photographes.
  *
- * Ajouter un article : une entrée ici, la date au format AAAA-MM ou AAAA-MM-JJ.
+ * Ajouter un article : une entrée ici, la date au format AAAA-MM ou AAAA-MM-JJ. Un extrait relevé
+ * se recopie aussi dans lib/__tests__/presse-publications.ts, que les tests confrontent à celui-ci.
  */
 
 export type LanguePresse = "fr" | "en" | "it" | "zh";
@@ -37,7 +41,10 @@ export interface VersionPresse {
   langue: LanguePresse;
   url: string;
   titre: string;
-  /** Premier paragraphe du corps de l'article, tel qu'il est publié ; null quand aucun texte n'a été relevé */
+  /**
+   * Début exact du corps de l'article, tel qu'il est publié : le premier paragraphe entier ou ses
+   * premières phrases ; null quand aucun texte n'a été relevé
+   */
   extrait: string | null;
 }
 

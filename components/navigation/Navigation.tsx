@@ -46,7 +46,7 @@ export default function Navigation() {
           <div className="flex items-center justify-between h-20">
             <Link
               href="/"
-              className={`text-xl sm:text-2xl whitespace-nowrap font-extralight hover:text-primary transition-all duration-500 ${
+              className={`text-xl sm:text-2xl whitespace-nowrap font-extralight hover:text-primary-strong transition-all duration-500 ${
                 scrolled ? "tracking-[0.05em]" : "tracking-[0.08em]"
               }`}
             >
@@ -59,8 +59,8 @@ export default function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-sm font-light tracking-[0.15em] uppercase hover:text-primary transition-colors duration-300 relative group ${
-                    pathname === link.href ? "text-primary" : ""
+                  className={`text-sm font-light tracking-[0.15em] uppercase hover:text-primary-strong transition-colors duration-300 relative group ${
+                    pathname === link.href ? "text-primary-strong" : ""
                   }`}
                 >
                   {link.label}

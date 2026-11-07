@@ -111,7 +111,7 @@ export default function MobileNav() {
                       href={link.href}
                       onClick={fermer}
                       className={`text-base font-light tracking-wide transition-colors py-2.5 min-h-[44px] flex items-center ${
-                        pathname === link.href ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                        pathname === link.href ? "text-primary-strong" : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {link.label}

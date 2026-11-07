@@ -1,13 +1,14 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import CookieConsent from "@/components/CookieConsent";
 import Footer from "@/components/Footer";
 import messagesEn from "@/messages/en.json";
 import messagesFr from "@/messages/fr.json";
 import messagesIt from "@/messages/it.json";
 
 /**
- * Pied de page rendu dans chaque langue du site avec ses vrais messages.
+ * Pied de page puis bandeau de cookies, rendus dans chaque langue du site avec ses vrais messages.
  * Le mode admin, qui exige le routeur de Next, est remplacé par le mode de lecture du visiteur.
  */
 vi.mock("@/contexts/AdminModeContext", () => ({
@@ -26,6 +27,8 @@ function rendre(locale: "fr" | "en" | "it", contenu: React.ReactNode) {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
+  localStorage.clear();
 });
 
 describe("pied de page", () => {
@@ -37,5 +40,18 @@ describe("pied de page", () => {
     rendre(locale, <Footer />);
     const titres = screen.getAllByRole("heading", { level: 3 }).map((titre) => titre.textContent);
     expect(titres).toEqual(["Guillaume Farré", navigation, informations]);
+  });
+});
+
+describe("bandeau de cookies", () => {
+  it.each(["fr", "en", "it"] as const)("mène à la politique de confidentialité de la langue courante (%s)", async (locale) => {
+    vi.useFakeTimers();
+    rendre(locale, <CookieConsent />);
+    // Le bandeau paraît une seconde après le chargement, faute de consentement enregistré
+    await act(async () => {
+      vi.advanceTimersByTime(1000);
+    });
+    const libelle = (MESSAGES[locale].cookies as Record<string, string>).learnMore;
+    expect(screen.getByRole("link", { name: libelle })).toHaveAttribute("href", `/${locale}/politique-de-confidentialite`);
   });
 });

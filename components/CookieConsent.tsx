@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { hasConsent, setConsent } from '@/lib/cookie-consent';
 

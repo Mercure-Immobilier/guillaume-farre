@@ -139,7 +139,7 @@ export default function WelcomeAnimation() {
           Bienvenue
         </p>
         <h1
-          className={`text-white text-3xl md:text-4xl font-light tracking-wider transition-all duration-700 ${
+          className={`text-white text-3xl md:text-4xl font-light tracking-wider text-center px-6 transition-all duration-700 ${
             phase === "light" || phase === "reveal"
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-4"

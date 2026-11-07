@@ -19,6 +19,10 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
     exclude: ['node_modules/**', '.next/**', 'e2e/**'],
+    // next-intl importe « next/navigation » sans extension, que Node seul ne résout pas : Vite le résout
+    server: {
+      deps: { inline: ['next-intl'] },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

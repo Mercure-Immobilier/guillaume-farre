@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation/Navigation";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import CartePresse from "@/components/presse/CartePresse";
 import { construireLibelles } from "@/components/presse/libelles";
+import { routing } from "@/i18n/routing";
 import { articlesParDate } from "@/lib/presse";
 
 /**
@@ -18,10 +19,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta.press" });
+  // Adresses relatives, complétées par le metadataBase de app/[locale]/layout.tsx
+  const adresse = (langue: string) => `/${langue}/presse`;
   return {
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical: adresse(locale),
+      languages: {
+        ...Object.fromEntries(routing.locales.map((langue) => [langue, adresse(langue)])),
+        "x-default": adresse(routing.defaultLocale),
+      },
+    },
     openGraph: {
+      url: adresse(locale),
       title: t("ogTitle"),
       description: t("ogDescription"),
       images: [{ url: "/images/og-image.jpg", width: 1200, height: 630, alt: t("ogAlt") }],

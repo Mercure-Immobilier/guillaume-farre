@@ -141,6 +141,18 @@ describe("page Presse rendue", () => {
     expect(contientLaPartieObscene(JSON.stringify(metadonnees))).toBe(false);
   });
 
+  it.each(LANGUES_DU_SITE)("déclare sa propre adresse canonique avec celles des autres langues (%s)", async (locale) => {
+    const { alternates, openGraph } = await generateMetadata(parametres(locale));
+    expect(alternates?.canonical).toBe(`/${locale}/presse`);
+    expect(alternates?.languages).toEqual({
+      fr: "/fr/presse",
+      en: "/en/presse",
+      it: "/it/presse",
+      "x-default": "/fr/presse",
+    });
+    expect(openGraph?.url).toBe(`/${locale}/presse`);
+  });
+
   it.each(LANGUES_DU_SITE)("ouvre chaque article dans un nouvel onglet sans transmettre la page d'origine (%s)", async (locale) => {
     const page = await pageRendue(locale);
     const liens = [...page.querySelectorAll("main article a")];

@@ -29,7 +29,7 @@ export default function TextePresse({ contenu, variante }: { contenu: ContenuCar
   const styles = STYLES[variante];
   return (
     <div>
-      <p className="text-[11px] font-light uppercase tracking-[0.3em] text-primary sm:text-xs">{contenu.media}</p>
+      <p className="text-xs font-light uppercase tracking-[0.3em] text-muted-foreground">{contenu.media}</p>
       <h2
         lang={contenu.langueCitee ?? undefined}
         className={`${styles.titre} text-balance font-light tracking-wide text-foreground ${contenu.lien ? TITRE_AU_SURVOL : ""}`}

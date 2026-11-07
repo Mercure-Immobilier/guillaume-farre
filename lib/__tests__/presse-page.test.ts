@@ -64,6 +64,15 @@ async function pageRendue(locale: LangueDuSite): Promise<Document> {
 /** Texte lu à l'écran, espaces insécables comprises comme des espaces */
 const texteLu = (el: Element | null) => (el?.textContent ?? "").replace(/ /g, " ");
 
+/** Taille en pixels d'une classe de police Tailwind (text-xs, sm:text-[11px]…), null pour toute autre classe */
+const TAILLES_TAILWIND: Record<string, number> = { xs: 12, sm: 14, base: 16, lg: 18, xl: 20, "2xl": 24 };
+function taillePolice(classe: string): number | null {
+  const nommee = classe.match(/(?:^|:)text-(xs|sm|base|lg|xl|2xl)$/);
+  if (nommee) return TAILLES_TAILWIND[nommee[1]];
+  const arbitraire = classe.match(/(?:^|:)text-\[(\d+(?:\.\d+)?)px\]$/);
+  return arbitraire ? Number(arbitraire[1]) : null;
+}
+
 /** Version que chaque carte cite, dans l'ordre de la page : article puis langue de l'extrait */
 const CITATIONS_ATTENDUES: Record<LangueDuSite, [string, "fr" | "en"][]> = {
   fr: [["qceg-2026-10", "fr"], ["sud-ouest-2026-06", "fr"]],
@@ -179,6 +188,20 @@ describe("page Presse rendue", () => {
       expect(carte.getAttribute("class")?.split(/\s+/)).toContain("relative");
       expect(etires).toHaveLength(1);
       expect(texteLu(etires[0]).startsWith(invitation)).toBe(true);
+    }
+  });
+
+  it.each(LANGUES_DU_SITE)("écrit le nom du média dans la couleur du texte, à 12 pixels au moins (%s)", async (locale) => {
+    const page = await pageRendue(locale);
+    const medias = [...page.querySelectorAll("main article")].map((carte) => carte.querySelector("p"));
+    expect(medias.map(texteLu)).toEqual(ARTICLES_PRESSE.map((a) => a.media));
+    for (const media of medias) {
+      const classes = (media?.getAttribute("class") ?? "").split(/\s+/);
+      expect(classes).toContain("text-muted-foreground");
+      expect(classes.filter((c) => /(^|:)text-primary$/.test(c))).toEqual([]);
+      const tailles = classes.map(taillePolice).filter((t): t is number => t !== null);
+      expect(tailles.length).toBeGreaterThan(0);
+      expect(Math.min(...tailles)).toBeGreaterThanOrEqual(12);
     }
   });
 

@@ -61,7 +61,7 @@ export default async function PressePage({ params }: { params: Promise<{ locale:
         {suivants.length > 0 && (
           <div className="mt-20 grid gap-16 sm:mt-28 md:grid-cols-2 md:gap-10 lg:mt-36 lg:gap-16">
             {suivants.map((article, rang) => (
-              <ScrollReveal key={article.id} delay={rang * 0.12}>
+              <ScrollReveal key={article.id} delay={rang * 0.12} className="h-full">
                 <CartePresse article={article} locale={locale} libelles={libelles} variante="grille" />
               </ScrollReveal>
             ))}

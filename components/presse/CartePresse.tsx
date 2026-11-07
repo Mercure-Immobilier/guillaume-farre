@@ -15,7 +15,9 @@ interface Disposition {
 /**
  * La vedette se lit comme une double page dès 1024 pixels : la toile à gauche, le texte à droite.
  * En dessous, la toile passe au-dessus du texte, en paysage sur tablette pour rester large.
- * Les cartes de la grille posent toujours la toile au-dessus du texte.
+ * Les cartes de la grille posent toujours la toile au-dessus du texte. Côte à côte, elles prennent
+ * la hauteur de la rangée : la toile d'une carte au texte court, ENZO sans extrait par exemple,
+ * s'allonge jusqu'au bas de sa voisine au lieu de laisser un blanc sous la carte.
  */
 const DISPOSITIONS: Record<VariantePresse, Disposition> = {
   vedette: {
@@ -26,10 +28,10 @@ const DISPOSITIONS: Record<VariantePresse, Disposition> = {
     sizes: "(min-width: 1200px) 640px, (min-width: 1024px) 58vw, 100vw",
   },
   grille: {
-    carte: "",
-    image: "",
+    carte: "flex h-full flex-col",
+    image: "flex grow flex-col",
     texte: "mt-6 sm:mt-8",
-    ratio: "aspect-[4/3]",
+    ratio: "aspect-[4/3] grow",
     sizes: "(min-width: 1200px) 540px, (min-width: 768px) 50vw, 100vw",
   },
 };

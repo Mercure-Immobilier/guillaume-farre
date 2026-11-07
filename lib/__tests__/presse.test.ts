@@ -15,6 +15,7 @@ import {
   type ArticlePresse,
 } from "../presse";
 import { FILTRE_TOILE } from "../toiles-filter";
+import { EXTRAITS_PUBLIES } from "./presse-publications";
 
 const LANGUES_DU_SITE = ["fr", "en", "it"] as const;
 type LangueDuSite = (typeof LANGUES_DU_SITE)[number];
@@ -61,14 +62,24 @@ describe("articles de presse", () => {
     expect(ARTICLES_PRESSE.map((a) => a.toile.nom)).toEqual(["Traces", "Biarritz", "Cavalino"]);
   });
 
-  it("garde les extraits tels que publiés, les guillemets restant à l'affichage", () => {
+  it("écrit chaque extrait sans espace ni guillemet autour, les guillemets étant posés à l'affichage", () => {
     for (const a of ARTICLES_PRESSE) {
       for (const version of a.versions) {
         if (version.extrait === null) continue;
         expect(version.extrait).toBe(version.extrait.trim());
-        expect(version.extrait).not.toMatch(/^[«“"]/);
+        expect(version.extrait).not.toMatch(/^[«“"]|[»”"]$/);
       }
     }
+  });
+
+  it("garde chaque extrait tel que publié", () => {
+    const releves = ARTICLES_PRESSE.flatMap((a) =>
+      a.versions.filter((v) => v.extrait !== null).map((v) => [`${a.id} ${v.langue}`, v.extrait]),
+    );
+    const publies = Object.entries(EXTRAITS_PUBLIES).flatMap(([id, parLangue]) =>
+      Object.entries(parLangue).map(([langue, texte]) => [`${id} ${langue}`, texte]),
+    );
+    expect(Object.fromEntries(releves)).toEqual(Object.fromEntries(publies));
   });
 
   it.each(LANGUES_DU_SITE)("n'écrit aucun sous-titre sous le titre de la page %s", (locale) => {

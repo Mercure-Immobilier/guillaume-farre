@@ -66,6 +66,21 @@ export default function WelcomeAnimation() {
         phase === "reveal" ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
+      {/* Voiles qui s'écartent, posés sous la lumière et le texte : rendus après eux, ils les couvraient pendant
+          toute la phase « light », le halo grandissait sans être vu. */}
+      <div
+        className={`absolute top-0 bottom-0 left-0 bg-black transition-transform duration-1000 ease-in-out ${
+          phase === "reveal" ? "-translate-x-full" : "translate-x-0"
+        }`}
+        style={{ width: "51%" }}
+      />
+      <div
+        className={`absolute top-0 bottom-0 right-0 bg-black transition-transform duration-1000 ease-in-out ${
+          phase === "reveal" ? "translate-x-full" : "translate-x-0"
+        }`}
+        style={{ width: "51%" }}
+      />
+
       {/* Particules dorées flottantes - Couleur primary (bronze) */}
       <div className="absolute inset-0 overflow-hidden">
         {particles.map((particle, i) => (
@@ -134,20 +149,6 @@ export default function WelcomeAnimation() {
           dans l'univers de Guillaume Farré
         </h1>
       </div>
-
-      {/* Voiles qui s'écartent */}
-      <div
-        className={`absolute top-0 bottom-0 left-0 bg-black transition-transform duration-1000 ease-in-out ${
-          phase === "reveal" ? "-translate-x-full" : "translate-x-0"
-        }`}
-        style={{ width: "51%" }}
-      />
-      <div
-        className={`absolute top-0 bottom-0 right-0 bg-black transition-transform duration-1000 ease-in-out ${
-          phase === "reveal" ? "translate-x-full" : "translate-x-0"
-        }`}
-        style={{ width: "51%" }}
-      />
     </div>
   );
 }

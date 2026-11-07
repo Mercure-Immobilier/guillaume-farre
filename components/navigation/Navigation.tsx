@@ -29,12 +29,19 @@ export default function Navigation() {
     <>
       {/* Barre de navigation sticky */}
       <nav
-        className={`sticky top-0 z-40 transition-all duration-700 ease-out ${
-          scrolled
-            ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm"
-            : "bg-background border-b border-transparent"
+        className={`sticky top-0 z-40 border-b transition-all duration-700 ease-out ${
+          scrolled ? "border-border/50 shadow-sm" : "border-transparent"
         }`}
       >
+        {/* Fond de l'en-tête, voilé et flouté au défilement. Le flou vit sur cette couche : porté par l'en-tête, un
+            backdrop-filter faisait de lui le bloc conteneur de ses descendants fixes, ce qui ramenait à 80 px de haut
+            le calque qui referme le sélecteur de langue au clic sur la page. */}
+        <div
+          aria-hidden="true"
+          className={`absolute inset-0 -z-10 transition-all duration-700 ease-out ${
+            scrolled ? "bg-background/80 backdrop-blur-md" : "bg-background"
+          }`}
+        />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <Link

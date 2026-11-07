@@ -9,6 +9,11 @@ import { defineConfig } from 'vitest/config';
 import path from 'path';
 
 export default defineConfig({
+  // Next impose « jsx: preserve » dans tsconfig.json : les composants que les tests rendent
+  // (lib/__tests__/presse-page.test.ts) se compilent donc ici avec le runtime automatique de React
+  oxc: {
+    jsx: { runtime: 'automatic', importSource: 'react' },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

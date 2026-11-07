@@ -38,7 +38,7 @@ const parametres = (locale: string) => ({ params: Promise.resolve({ locale }) })
 /** Texte de <main> lu comme le relève texte-servi.py : chaque nœud de texte rogné, joints par une espace */
 async function texteServi(page: Page, locale: string): Promise<string> {
   // Le Link de next-intl lit la langue dans le contexte que pose le gabarit du site
-  const html = renderToStaticMarkup(createElement(NextIntlClientProvider, { locale, children: await page(parametres(locale)) }));
+  const html = renderToStaticMarkup(<NextIntlClientProvider locale={locale}>{await page(parametres(locale))}</NextIntlClientProvider>);
   const main = new DOMParser().parseFromString(html, "text/html").querySelector("main");
   if (!main) throw new Error("aucun élément main");
   const morceaux: string[] = [];

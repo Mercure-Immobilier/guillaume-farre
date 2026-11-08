@@ -409,6 +409,12 @@
   "meta": {
     "siteName": "Guillaume Farré",
     "rootDescription": "Guillaume Farré — Tele e Fotografie.",
+    "site": {
+      "description": "Scoprite l'universo artistico unico di Guillaume Farré: quadri astratti creati dal passaggio diretto della Dino sulla tela, fotografie d'arte in serie limitate.",
+      "ogTitle": "Guillaume Farré - Artista",
+      "ogAlt": "Guillaume Farré — Tele e Fotografie",
+      "keywords": "Guillaume Farré, artista, Dino, arte astratta, fotografia d'arte, serie limitate, dipinti contemporanei"
+    },
     "histoire": {
       "title": "Storia",
       "description": "La storia di Guillaume Farré: dalla piccola Ferrari n° 20 della sua infanzia alla Dino del suo atelier. Quarant'anni di passione automobilistica trasformati in arte.",
@@ -453,6 +459,7 @@
       "title": "Guillaume Farré — Accesso",
       "description": "Accesso amministrazione del sito Guillaume Farré."
     },
+    "galerieItemTitle": "Fotografia {numero}",
     "galerieItemFallbackDescription": "{title} — Fotografia d'arte di Guillaume Farré",
     "press": {
       "title": "Stampa",

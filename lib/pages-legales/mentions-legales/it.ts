@@ -2,6 +2,8 @@ import type { DocumentLegal } from "../types";
 
 const mentionsLegales: DocumentLegal = {
   titre: "Note legali",
+  description:
+    "Note legali del sito guillaumefarre.com: editore del sito, direttore della pubblicazione, hosting, proprietà intellettuale e crediti fotografici.",
   avertissement: [
     "Questa traduzione italiana è fornita a solo titolo informativo. Fa fede unicamente la ",
     { lien: "versione francese", vers: "/mentions-legales", langue: "fr" },

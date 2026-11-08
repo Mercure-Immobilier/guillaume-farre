@@ -37,6 +37,8 @@ export interface Section {
 export interface DocumentLegal {
   /** Titre de la page, repris par l'onglet */
   titre: string;
+  /** Description de la page pour les moteurs de recherche puis les cartes de partage, dans la langue de la version */
+  description: string;
   /** Versions anglaise et italienne : phrase de tête disant que la version française fait foi */
   avertissement?: Texte;
   sections: readonly Section[];
@@ -46,6 +48,8 @@ export interface DocumentLegal {
 /** Page Retours et échanges, présentée en cartes : délai, conditions, étapes, exceptions, garantie, contact */
 export interface PageRetours {
   titre: string;
+  /** Description de la page pour les moteurs de recherche puis les cartes de partage, dans la langue de la version */
+  description: string;
   avertissement?: Texte;
   delai: { titre: string; texte: Texte };
   conditions: { titre: string; points: readonly Texte[] };

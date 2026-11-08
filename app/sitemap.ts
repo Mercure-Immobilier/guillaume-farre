@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import photos from '@/data/photos.json';
+import { getWorksFromMetadata } from '@/lib/works';
 
 /**
  * Sitemap.xml pour Google Search Console
@@ -7,7 +7,7 @@ import photos from '@/data/photos.json';
  *
  * @author Lalou
  */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://guillaumefarre.com';
 
   const locales = ['fr', 'en', 'it'];
@@ -45,24 +45,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // Photo product pages (galerie-item/{slug})
-  for (const photo of photos) {
-    const slug = photo.name.toLowerCase().replace(/\s+/g, '-');
-
+  // Fiches d'œuvres : les identifiants que sert app/[locale]/galerie-item/[slug], tirés de la même source qu'elle.
+  // Le plan du site les tirait des noms de data/photos.json (« etna », « at-work ») auxquels aucune fiche ne répond :
+  // ses 48 adresses de fiches servaient la page introuvable jusqu'au 8 novembre 2026.
+  const works = await getWorksFromMetadata();
+  for (const work of works) {
     for (const locale of locales) {
       urls.push({
-        url: `${baseUrl}/${locale}/galerie-item/${slug}`,
+        url: `${baseUrl}/${locale}/galerie-item/${work.slug}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.7,
         alternates: {
           languages: {
-            fr: `${baseUrl}/fr/galerie-item/${slug}`,
-            en: `${baseUrl}/en/galerie-item/${slug}`,
-            it: `${baseUrl}/it/galerie-item/${slug}`,
+            fr: `${baseUrl}/fr/galerie-item/${work.slug}`,
+            en: `${baseUrl}/en/galerie-item/${work.slug}`,
+            it: `${baseUrl}/it/galerie-item/${work.slug}`,
           },
         },
-        images: [`${baseUrl}${photo.image}`],
+        images: work.images.map((image) => `${baseUrl}${image}`),
       });
     }
   }

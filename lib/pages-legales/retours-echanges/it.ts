@@ -2,6 +2,8 @@ import type { PageRetours } from "../types";
 
 const retoursEchanges: PageRetours = {
   titre: "Resi e cambi",
+  description:
+    "Resi e cambi su guillaumefarre.com: termine di recesso di 14 giorni, condizioni, procedura di reso, rimborso, eccezioni e garanzia di qualità.",
   avertissement: [
     "Questa traduzione italiana è fornita a solo titolo informativo. Fa fede unicamente la ",
     { lien: "versione francese", vers: "/retours-echanges", langue: "fr" },

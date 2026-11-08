@@ -2,6 +2,8 @@ import type { DocumentLegal } from "../types";
 
 const cgv: DocumentLegal = {
   titre: "General Terms and Conditions of Sale",
+  description:
+    "General terms and conditions of sale of the guillaumefarre.com website: prices, products, orders and payment, delivery, right of withdrawal and certificate of authenticity.",
   avertissement: [
     "This English translation is provided for information only. The ",
     { lien: "French version", vers: "/cgv", langue: "fr" },

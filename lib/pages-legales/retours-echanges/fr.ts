@@ -2,6 +2,8 @@ import type { PageRetours } from "../types";
 
 const retoursEchanges: PageRetours = {
   titre: "Retours & Échanges",
+  description:
+    "Retours et échanges sur guillaumefarre.com : délai de rétractation de 14 jours, conditions, procédure de retour, remboursement, exceptions et garantie qualité.",
   delai: {
     titre: "Délai de rétractation : 14 jours",
     texte: [

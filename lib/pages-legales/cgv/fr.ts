@@ -2,6 +2,8 @@ import type { DocumentLegal } from "../types";
 
 const cgv: DocumentLegal = {
   titre: "Conditions Générales de Vente",
+  description:
+    "Conditions générales de vente du site guillaumefarre.com : prix, produits, commande et paiement, livraison, droit de rétractation et certificat d'authenticité.",
   sections: [
     {
       titre: "1. Informations légales",

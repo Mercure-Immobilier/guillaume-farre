@@ -26,6 +26,7 @@ const config: Config = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          strong: "hsl(var(--primary-strong))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -60,13 +61,6 @@ const config: Config = {
       scale: {
         '102': '1.02',
         '103': '1.03',
-      },
-      // Durées longues des animations d'entrée (DarkEntry, WelcomeAnimation). En valeur arbitraire
-      // (duration-[1500ms]), Tailwind ne les génère pas : tailwindcss-animate déclare lui aussi duration-*,
-      // ce qui rend toute valeur arbitraire ambiguë. Nommées ici, duration-1500 et duration-3000 existent.
-      transitionDuration: {
-        '1500': '1500ms',
-        '3000': '3000ms',
       },
     },
   },

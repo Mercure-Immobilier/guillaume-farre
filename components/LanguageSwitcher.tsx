@@ -30,7 +30,7 @@ export default function LanguageSwitcher() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-light text-foreground hover:text-primary transition-colors min-h-[44px]"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-light text-foreground hover:text-primary-strong transition-colors min-h-[44px]"
         disabled={isPending}
       >
         <span className="text-xl">{currentLanguage?.flag}</span>
@@ -59,7 +59,7 @@ export default function LanguageSwitcher() {
                   onClick={() => onSelectChange(language.code)}
                   className={`${
                     locale === language.code
-                      ? 'bg-muted text-primary'
+                      ? 'bg-muted text-primary-strong'
                       : 'text-foreground hover:bg-muted'
                   } flex items-center gap-3 w-full px-4 py-2 text-sm font-light transition-colors min-h-[44px]`}
                   role="menuitem"

@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation/Navigation";
 import { getWorksFromMetadata } from "@/lib/works";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
+import { carteTwitter } from "@/lib/carte-twitter";
 import GalerieItemClient from "./GalerieItemClient";
 import { safeJsonLd } from "@/lib/safe-json-ld";
 import blurPlaceholders from "@/data/blur-placeholders.json";
@@ -36,22 +37,24 @@ export async function generateMetadata({
   const fallback = t("galerieItemFallbackDescription", { title: work.title });
   const description = work.description || fallback;
 
+  const openGraph = {
+    title: work.title,
+    description,
+    images: [
+      {
+        url: work.images[0],
+        width: 1200,
+        height: 900,
+        alt: work.title,
+      },
+    ],
+    type: "website" as const,
+  };
   return {
     title: work.title,
     description,
-    openGraph: {
-      title: work.title,
-      description,
-      images: [
-        {
-          url: work.images[0],
-          width: 1200,
-          height: 900,
-          alt: work.title,
-        },
-      ],
-      type: "website",
-    },
+    openGraph,
+    twitter: carteTwitter(openGraph),
   };
 }
 

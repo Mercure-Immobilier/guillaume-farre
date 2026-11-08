@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { carteTwitter } from "@/lib/carte-twitter";
 import Navigation from "@/components/navigation/Navigation";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import CartePresse from "@/components/presse/CartePresse";
@@ -21,6 +22,12 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "meta.press" });
   // Adresses relatives, complétées par le metadataBase de app/[locale]/layout.tsx
   const adresse = (langue: string) => `/${langue}/presse`;
+  const openGraph = {
+    url: adresse(locale),
+    title: t("ogTitle"),
+    description: t("ogDescription"),
+    images: [{ url: "/images/og-image.jpg", width: 1200, height: 630, alt: t("ogAlt") }],
+  };
   return {
     title: t("title"),
     description: t("description"),
@@ -31,12 +38,8 @@ export async function generateMetadata({
         "x-default": adresse(routing.defaultLocale),
       },
     },
-    openGraph: {
-      url: adresse(locale),
-      title: t("ogTitle"),
-      description: t("ogDescription"),
-      images: [{ url: "/images/og-image.jpg", width: 1200, height: 630, alt: t("ogAlt") }],
-    },
+    openGraph,
+    twitter: carteTwitter(openGraph),
   };
 }
 

@@ -48,6 +48,22 @@ bunx playwright test a11y
 | `navigation.spec.ts` | Smoke nav globale (legacy) | aucune |
 | `admin-upload.spec.ts` | Smoke admin upload (legacy) | aucune |
 
+## Gardes d'affichage
+
+`gardes-affichage.spec.ts` se joue contre le serveur local, après une construction faite avec l'environnement
+du site public (`SITE_MODE=public`) :
+
+```bash
+bun run build && bun run test:gardes                            # next start sur le port 3993, puis 37 cas
+PLAYWRIGHT_BASE_URL=http://localhost:3991 bun run test:gardes   # contre un serveur déjà lancé
+GARDES_ENV=/tmp/gf-presse-env.sh bash e2e/cassures-gardes.sh    # chaque garde vue tomber sur sa cassure
+```
+
+La suite tombe sur un débordement horizontal (390, 768, 1024, 1440 px ; /fr, /fr/presse, /fr/toiles,
+/fr/contact), sur moins de 24 px d'air entre le nom du site et le menu de 768 à 1024 px, sur une zone d'appui
+des liens « Autres langues » de la presse sous 24 px, sur un lien actif du menu sous 4,5 pour 1, sur une carte de
+la presse restée invisible après défilement. Un témoin la fait tomber quand le serveur ne sert pas le site public.
+
 ## A11y — bareme
 
 `a11y.spec.ts` echoue si une page contient une violation `critical` ou

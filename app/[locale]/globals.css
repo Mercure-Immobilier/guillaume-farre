@@ -18,6 +18,9 @@
     --popover: 40 15% 99%;
     --popover-foreground: 30 8% 12%;
     --primary: 38 45% 48%; /* #A68D5E - Or/Bronze plus foncé pour lisibilité */
+    /* Bronze patiné du lien actif et du survol de l'en-tête : #685027, 7,5 pour 1 sur l'ivoire, 4,7 pour 1 sous
+       l'en-tête voilé à 80 % posé sur une image noire. La primaire, #B18943, n'y donnait que 3,2 et 2 pour 1. */
+    --primary-strong: 38 45% 28%;
     --primary-foreground: 40 18% 97%;
     --secondary: 30 22% 55%; /* #9A8B75 - Taupe clair */
     --secondary-foreground: 30 8% 12%;
@@ -42,6 +45,7 @@
     --popover: 30 10% 16%;
     --popover-foreground: 40 10% 92%;
     --primary: 38 45% 58%; /* #C4A570 - Or/Bronze doux, élégant */
+    --primary-strong: 38 45% 58%; /* 6,8 pour 1 sur ce fond sombre */
     --primary-foreground: 30 8% 12%;
     --secondary: 30 22% 45%; /* #7A6F5D - Taupe chaud */
     --secondary-foreground: 40 10% 92%;

@@ -35,7 +35,7 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale, namespace: "meta" });
   const titre = await titreDansLaLangue(work, locale);
-  // La description que portent les données est rédigée en français : les autres langues prennent la phrase générique
+  // La description des données est rédigée en français : les autres langues prennent la phrase générique
   const description =
     (locale === routing.defaultLocale && work.description) || t("galerieItemFallbackDescription", { title: titre });
 
@@ -49,7 +49,7 @@ export async function generateMetadata({
 }
 
 /**
- * Titre d'une œuvre dans la langue de la page. Une œuvre sans nom porte dans les données le titre générique français
+ * Titre d'une œuvre dans la langue de la page. Une œuvre sans nom a dans les données le titre générique français
  * « Photographie 5 », que les métadonnées disent dans la langue de la page ; un vrai titre d'œuvre ne se traduit pas.
  */
 async function titreDansLaLangue(work: Work, locale: string): Promise<string> {

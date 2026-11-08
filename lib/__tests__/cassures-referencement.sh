@@ -19,7 +19,7 @@ mkdir -p "$JOURNAUX"
 CASSURES=(
   'canonical-racine|lib/adresses-de-page.ts|    canonical: adresseDePage(langue, chemin),|    canonical: chemin === "/galerie" ? "https://guillaumefarre.com" : adresseDePage(langue, chemin),|https://guillaumefarre.com/en/galerie déclare sa propre adresse pour canonical|3'
   'versions-accueil|lib/adresses-de-page.ts|[version, adresseDePage(version, chemin)]|[version, adresseDePage(version, "")]|https://guillaumefarre.com/it/contact déclare la même page dans chaque langue|72'
-  'description-francaise|messages/en.json|"description": "Photographs by Guillaume Farré — numbered and signed prints, limited editions.",|"description": "Photographies de Guillaume Farré — tirages numérotés et signés, éditions limitées.",|https://guillaumefarre.com/en/galerie ne porte aucun mot français|1'
+  'description-francaise|messages/en.json|"description": "Photographs by Guillaume Farré — numbered and signed prints, limited editions.",|"description": "Photographies de Guillaume Farré — tirages numérotés et signés, éditions limitées.",|https://guillaumefarre.com/en/galerie ne contient aucun mot français|1'
   'og-locale|lib/metadonnees-de-page.ts|    locale: localeOpenGraph(langue),|    locale: localeOpenGraph(routing.defaultLocale),|https://guillaumefarre.com/it/cgv déclare la langue de sa carte de partage|50'
 )
 
@@ -46,7 +46,7 @@ echec=0
 for ligne in "${CASSURES[@]}"; do
   IFS='|' read -r nom fichier ancien nouveau attendu nombre <<< "$ligne"
   [ $# -gt 0 ] && [ "$1" != "$nom" ] && continue
-  if ! git diff --quiet -- "$fichier"; then echo "$nom : $fichier porte des modifications en cours, cassure refusée"; echec=1; continue; fi
+  if ! git diff --quiet -- "$fichier"; then echo "$nom : $fichier a des modifications en cours, cassure refusée"; echec=1; continue; fi
   copie="$JOURNAUX/$nom.original"
   cp "$fichier" "$copie"
   if ! remplacer "$fichier" "$ancien" "$nouveau"; then echec=1; continue; fi

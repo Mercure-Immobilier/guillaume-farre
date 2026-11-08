@@ -13,7 +13,7 @@ import type { Metadata } from "next";
 
 const BLUR = blurPlaceholders as Record<string, string>;
 
-// Sans titre propre : l'accueil garde le titre du site que porte le gabarit
+// Sans titre propre : l'accueil garde le titre du site, déclaré par le gabarit
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta.site" });

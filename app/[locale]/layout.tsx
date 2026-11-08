@@ -14,7 +14,7 @@ import { autresLocalesOpenGraph, IMAGE_DU_SITE, localeOpenGraph, NOM_DU_SITE } f
 import "./globals.css";
 
 // SEO - Décisions audit 2025-01-20. Les textes suivent la langue de la page (messages, meta.site) : les pages qui ne
-// déclarent pas les leurs les héritent. La carte de partage ne porte pas d'adresse, le gabarit ignorant le chemin.
+// déclarent pas les leurs les héritent. La carte de partage n'a pas d'adresse : le gabarit ignore le chemin de la page.
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const langue = (routing.locales as readonly string[]).includes(locale) ? locale : routing.defaultLocale;

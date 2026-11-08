@@ -4,7 +4,7 @@
  * descriptions, cartes de partage, og:locale.
  *
  * Les métadonnées se lisent comme Next les rend : celles du gabarit app/[locale]/layout.tsx, dont la page remplace
- * chaque clé qu'elle déclare. Jusqu'au 8 novembre 2026 le gabarit portait le canonical de la racine, que 72 adresses
+ * chaque clé qu'elle déclare. Jusqu'au 8 novembre 2026 le gabarit déclarait le canonical de la racine, que 72 adresses
  * sur 75 héritaient : Google les tenait pour des doublons de l'accueil.
  */
 import type { Metadata } from "next";
@@ -166,7 +166,7 @@ const TRADUCTIONS = ADRESSES.filter(({ langue }) => langue !== "fr");
 const LOCALES_OPEN_GRAPH: Record<string, string> = { fr: "fr_FR", en: "en_US", it: "it_IT" };
 
 describe("plan du site", () => {
-  it("témoin : il porte les neuf pages et les fiches d'œuvres, dans les trois langues, sur l'origine de production", () => {
+  it("témoin : il contient les neuf pages et les fiches d'œuvres, dans les trois langues, sur l'origine de production", () => {
     const chemins = new Set(ADRESSES.map(({ chemin }) => chemin));
     for (const chemin of Object.keys(PAGES)) expect(chemins.has(chemin)).toBe(true);
     const fiches = ADRESSES.filter(({ chemin }) => chemin.startsWith("/galerie-item/"));
@@ -213,7 +213,7 @@ describe("versions linguistiques", () => {
 });
 
 describe("langue des métadonnées", () => {
-  it("témoin : le relevé des mots français voit le texte que portaient les pages anglaises et italiennes", () => {
+  it("témoin : le relevé des mots français voit le texte français des pages anglaises et italiennes d'avant", () => {
     const ancien =
       "Découvrez l'univers artistique unique de Guillaume Farré : tableaux abstraits créés par le passage direct de la " +
       "Dino sur toile, photographies d'art en séries limitées.";
@@ -227,7 +227,7 @@ describe("langue des métadonnées", () => {
     );
   });
 
-  it.each(TRADUCTIONS)("$adresse ne porte aucun mot français", async (adresse) => {
+  it.each(TRADUCTIONS)("$adresse ne contient aucun mot français", async (adresse) => {
     const textes = textesDe(await metadonneesDe(adresse));
     expect(textes.length).toBeGreaterThanOrEqual(6);
     expect(textes.flatMap((texte) => motsFrancais(texte).map((mot) => `${mot} ← ${texte}`))).toEqual([]);

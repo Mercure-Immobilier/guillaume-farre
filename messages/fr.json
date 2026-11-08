@@ -409,6 +409,12 @@
   "meta": {
     "siteName": "Guillaume Farré",
     "rootDescription": "Guillaume Farré — Toiles et Photographies.",
+    "site": {
+      "description": "Découvrez l'univers artistique unique de Guillaume Farré : tableaux abstraits créés par le passage direct de la Dino sur toile, photographies d'art en séries limitées.",
+      "ogTitle": "Guillaume Farré - Artiste",
+      "ogAlt": "Guillaume Farré — Toiles et Photographies",
+      "keywords": "Guillaume Farré, artiste, Dino, art abstrait, photographie d'art, séries limitées, tableaux contemporains"
+    },
     "histoire": {
       "title": "Histoire",
       "description": "L'histoire de Guillaume Farré : de la petite Ferrari n°20 de son enfance à la Dino de son atelier. Quarante ans de passion automobile transformée en art.",
@@ -453,6 +459,7 @@
       "title": "Guillaume Farré — Connexion",
       "description": "Accès administration du site Guillaume Farré."
     },
+    "galerieItemTitle": "Photographie {numero}",
     "galerieItemFallbackDescription": "{title} — Photographie d'art par Guillaume Farré",
     "press": {
       "title": "Presse",

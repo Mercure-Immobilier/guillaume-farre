@@ -1,6 +1,7 @@
 /**
  * Référencement par langue : chaque adresse du plan du site, dans chacune des trois langues, déclare pour canonical sa
- * propre adresse de production avec ses versions linguistiques.
+ * propre adresse de production avec ses versions linguistiques, puis des métadonnées dans sa langue : titre,
+ * descriptions, cartes de partage, og:locale.
  *
  * Les métadonnées se lisent comme Next les rend : celles du gabarit app/[locale]/layout.tsx, dont la page remplace
  * chaque clé qu'elle déclare. Jusqu'au 8 novembre 2026 le gabarit portait le canonical de la racine, que 72 adresses
@@ -9,7 +10,7 @@
 import type { Metadata } from "next";
 import type { AbstractIntlMessages } from "next-intl";
 import { describe, expect, it, vi } from "vitest";
-import * as gabarit from "@/app/[locale]/layout";
+import { generateMetadata as metaGabarit } from "@/app/[locale]/layout";
 import { generateMetadata as metaAccueil } from "@/app/[locale]/page";
 import { generateMetadata as metaCgv } from "@/app/[locale]/cgv/page";
 import { generateMetadata as metaContact } from "@/app/[locale]/contact/page";
@@ -65,12 +66,6 @@ const PAGES: Record<string, Generateur> = {
   "/retours-echanges": metaRetours,
 };
 
-async function metadonneesDuGabarit(langue: string): Promise<Metadata> {
-  const module = gabarit as unknown as { metadata?: Metadata; generateMetadata?: Generateur };
-  if (module.generateMetadata) return module.generateMetadata({ params: Promise.resolve({ locale: langue }) });
-  return module.metadata ?? {};
-}
-
 interface Adresse {
   adresse: string;
   langue: string;
@@ -90,7 +85,7 @@ async function metadonneesDe({ adresse, langue, chemin }: Adresse): Promise<Meta
   if (fiche) page = await metaFiche({ params: Promise.resolve({ locale: langue, slug: fiche[1] }) });
   else if (generateur) page = await generateur({ params: Promise.resolve({ locale: langue }) });
   else throw new Error(`aucune page connue ne sert ${adresse}`);
-  return { ...(await metadonneesDuGabarit(langue)), ...page };
+  return { ...(await metaGabarit({ params: Promise.resolve({ locale: langue }) })), ...page };
 }
 
 /** Adresse absolue d'une adresse de métadonnées, complétée comme Next le fait par le metadataBase */
@@ -113,7 +108,62 @@ function versionsDe(metadonnees: Metadata): Record<string, string> {
   );
 }
 
+/**
+ * Mots qui n'existent qu'en français parmi les trois langues du site. L'italien partage « la », « le » ou « qui » avec
+ * le français, l'anglais « on » ou « a » : ces mots restent hors de la liste, qui ne doit rien signaler à tort.
+ */
+const MOTS_FRANCAIS = [
+  "les", "des", "du", "une", "et", "avec", "pour", "dans", "sur", "par", "aux", "votre", "vos", "nous", "vous",
+  "cette", "ces", "leur", "leurs", "est", "sont", "découvrez", "créés", "créées", "tableaux", "toile", "toiles",
+  "œuvre", "œuvres", "oeuvre", "oeuvres", "photographie", "photographies", "artistique", "univers", "tirage",
+  "tirages", "numérotés", "signés", "série", "séries", "limitées", "édition", "éditions", "légales", "générales",
+  "confidentialité", "rétractation", "échanges", "retours", "livraison", "commande", "paiement", "contactez",
+];
+// Bornes écrites en lettres Unicode : en JavaScript, \b ignore « œ » ou « é » en tête de mot
+const MOT_FRANCAIS = new RegExp(`(?<![\\p{L}\\p{N}])(${MOTS_FRANCAIS.join("|")})(?![\\p{L}\\p{N}])`, "giu");
+
+function motsFrancais(texte: string): string[] {
+  return [...texte.matchAll(MOT_FRANCAIS)].map(([mot]) => mot);
+}
+
+interface CarteDePartage {
+  title?: unknown;
+  description?: unknown;
+  locale?: unknown;
+  alternateLocale?: unknown;
+  images?: unknown;
+}
+
+function chaines(valeur: unknown): string[] {
+  if (typeof valeur === "string") return [valeur];
+  if (Array.isArray(valeur)) return valeur.flatMap(chaines);
+  return [];
+}
+
+function textesDeCarte(carte: CarteDePartage | null | undefined): string[] {
+  if (!carte) return [];
+  const images = Array.isArray(carte.images) ? carte.images : [carte.images];
+  const alternatifs = images.map((image) => (image && typeof image === "object" ? (image as { alt?: unknown }).alt : undefined));
+  return [...chaines(carte.title), ...chaines(carte.description), ...chaines(alternatifs)];
+}
+
+/** Textes que les moteurs de recherche et les cartes de partage lisent : titre, descriptions, mots-clés, images */
+function textesDe(metadonnees: Metadata): string[] {
+  const titre = metadonnees.title;
+  const titres =
+    typeof titre === "string" ? [titre] : titre && typeof titre === "object" ? chaines(Object.values(titre)) : [];
+  return [
+    ...titres,
+    ...chaines(metadonnees.description),
+    ...chaines(metadonnees.keywords),
+    ...textesDeCarte(metadonnees.openGraph as CarteDePartage),
+    ...textesDeCarte(metadonnees.twitter as CarteDePartage),
+  ];
+}
+
 const ADRESSES = (await sitemap()).map(({ url }) => decomposer(url));
+const TRADUCTIONS = ADRESSES.filter(({ langue }) => langue !== "fr");
+const LOCALES_OPEN_GRAPH: Record<string, string> = { fr: "fr_FR", en: "en_US", it: "it_IT" };
 
 describe("plan du site", () => {
   it("témoin : il porte les neuf pages et les fiches d'œuvres, dans les trois langues, sur l'origine de production", () => {
@@ -159,5 +209,45 @@ describe("versions linguistiques", () => {
     const versions = versionsDe(await metadonneesDe(adresse));
     const page = (langue: string) => `${ORIGINE_DE_PRODUCTION}/${langue}${adresse.chemin}`;
     expect(versions).toEqual({ fr: page("fr"), en: page("en"), it: page("it"), "x-default": page("fr") });
+  });
+});
+
+describe("langue des métadonnées", () => {
+  it("témoin : le relevé des mots français voit le texte que portaient les pages anglaises et italiennes", () => {
+    const ancien =
+      "Découvrez l'univers artistique unique de Guillaume Farré : tableaux abstraits créés par le passage direct de la " +
+      "Dino sur toile, photographies d'art en séries limitées.";
+    expect(motsFrancais(ancien)).toEqual(
+      expect.arrayContaining(["Découvrez", "univers", "artistique", "tableaux", "créés", "photographies", "séries"]),
+    );
+    expect(motsFrancais("Œuvres et échanges")).toEqual(["Œuvres", "et", "échanges"]);
+    expect(motsFrancais("Guillaume Farré — Canvases and Photographs, la serie delle tele")).toEqual([]);
+    expect(textesDe({ title: "Contact", openGraph: { title: "Toiles", images: [{ url: "/i.jpg", alt: "œuvre" }] } })).toEqual(
+      ["Contact", "Toiles", "œuvre"],
+    );
+  });
+
+  it.each(TRADUCTIONS)("$adresse ne porte aucun mot français", async (adresse) => {
+    const textes = textesDe(await metadonneesDe(adresse));
+    expect(textes.length).toBeGreaterThanOrEqual(6);
+    expect(textes.flatMap((texte) => motsFrancais(texte).map((mot) => `${mot} ← ${texte}`))).toEqual([]);
+  });
+
+  it.each(ADRESSES)("$adresse déclare la langue de sa carte de partage", async (adresse) => {
+    const carte = (await metadonneesDe(adresse)).openGraph as CarteDePartage;
+    expect(carte.locale).toBe(LOCALES_OPEN_GRAPH[adresse.langue]);
+    expect(carte.alternateLocale).toEqual(
+      LANGUES.filter((langue) => langue !== adresse.langue).map((langue) => LOCALES_OPEN_GRAPH[langue]),
+    );
+  });
+
+  it.each(ADRESSES)("$adresse dit la même chose dans ses trois descriptions", async (adresse) => {
+    const metadonnees = await metadonneesDe(adresse);
+    const carte = metadonnees.openGraph as CarteDePartage;
+    const twitter = metadonnees.twitter as CarteDePartage;
+    expect(typeof metadonnees.description === "string" && metadonnees.description.length > 0).toBe(true);
+    expect(typeof carte.description === "string" && carte.description.length > 0).toBe(true);
+    expect(twitter.description).toBe(carte.description);
+    expect(twitter.title).toBe(carte.title);
   });
 });

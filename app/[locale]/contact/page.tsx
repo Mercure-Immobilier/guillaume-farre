@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { carteTwitter } from "@/lib/carte-twitter";
-import { alternatesDePage } from "@/lib/adresses-de-page";
+import { IMAGE_DU_SITE, metadonneesDePage } from "@/lib/metadonnees-de-page";
 import Navigation from "@/components/navigation/Navigation";
 import ContactContent from "@/components/pages/ContactContent";
 
@@ -12,18 +11,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta.contact" });
-  const openGraph = {
-    title: t("ogTitle"),
-    description: t("ogDescription"),
-    images: [{ url: "/images/og-image.jpg", width: 1200, height: 630, alt: t("ogAlt") }],
-  };
-  return {
-    title: t("title"),
+  return metadonneesDePage(locale, "/contact", {
+    titre: t("title"),
     description: t("description"),
-    alternates: alternatesDePage(locale, "/contact"),
-    openGraph,
-    twitter: carteTwitter(openGraph),
-  };
+    titreDePartage: t("ogTitle"),
+    descriptionDePartage: t("ogDescription"),
+    image: { ...IMAGE_DU_SITE, alt: t("ogAlt") },
+  });
 }
 
 /**

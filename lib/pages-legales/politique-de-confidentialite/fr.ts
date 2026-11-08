@@ -2,6 +2,8 @@ import type { DocumentLegal } from "../types";
 
 const politiqueDeConfidentialite: DocumentLegal = {
   titre: "Politique de Confidentialité",
+  description:
+    "Politique de confidentialité du site guillaumefarre.com : données collectées, finalités du traitement, durée de conservation, vos droits et cookies.",
   sections: [
     {
       titre: "1. Introduction",

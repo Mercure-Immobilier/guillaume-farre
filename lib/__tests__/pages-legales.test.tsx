@@ -8,7 +8,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { NextIntlClientProvider } from "next-intl";
+import { type AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { createElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -22,6 +22,20 @@ import type { Bloc, DocumentLegal, Morceau, PageRetours, Texte } from "@/lib/pag
 vi.mock("@/components/navigation/Navigation", () => ({
   default: () => createElement("nav", { "data-en-tete-du-site": "" }),
 }));
+
+// Les métadonnées des pages légales lisent le texte de l'image de partage dans les messages du site
+vi.mock("next-intl/server", async () => {
+  const { createTranslator } = await import("next-intl");
+  const messages = {
+    fr: (await import("@/messages/fr.json")).default,
+    en: (await import("@/messages/en.json")).default,
+    it: (await import("@/messages/it.json")).default,
+  };
+  return {
+    getTranslations: async ({ locale, namespace }: { locale: keyof typeof messages; namespace: string }) =>
+      createTranslator({ locale, messages: messages[locale] as AbstractIntlMessages, namespace }),
+  };
+});
 
 type Page = (p: { params: Promise<{ locale: string }> }) => Promise<ReactElement>;
 type Meta = (p: { params: Promise<{ locale: string }> }) => Promise<{ title?: unknown }>;

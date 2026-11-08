@@ -8,14 +8,21 @@ import { getPageImages } from "@/lib/page-images";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import blurPlaceholders from "@/data/blur-placeholders.json";
-import { alternatesDePage } from "@/lib/adresses-de-page";
+import { IMAGE_DU_SITE, metadonneesDePage } from "@/lib/metadonnees-de-page";
 import type { Metadata } from "next";
 
 const BLUR = blurPlaceholders as Record<string, string>;
 
+// Sans titre propre : l'accueil garde le titre du site que porte le gabarit
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { alternates: alternatesDePage(locale, "") };
+  const t = await getTranslations({ locale, namespace: "meta.site" });
+  return metadonneesDePage(locale, "", {
+    description: t("description"),
+    titreDePartage: t("ogTitle"),
+    descriptionDePartage: t("description"),
+    image: { ...IMAGE_DU_SITE, alt: t("ogAlt") },
+  });
 }
 
 export default async function HomePage() {

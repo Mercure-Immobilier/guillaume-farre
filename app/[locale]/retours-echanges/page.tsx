@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { alternatesDePage } from "@/lib/adresses-de-page";
+import { getTranslations } from "next-intl/server";
 import RetoursEchanges from "@/components/pages-legales/RetoursEchanges";
 import { RETOURS_ECHANGES, versionDe } from "@/lib/pages-legales";
+import { IMAGE_DU_SITE, metadonneesDePage, NOM_DU_SITE } from "@/lib/metadonnees-de-page";
 
 /** Retours et échanges : textes dans lib/pages-legales/retours-echanges, une version par langue */
 
@@ -11,7 +12,15 @@ interface Parametres {
 
 export async function generateMetadata({ params }: Parametres): Promise<Metadata> {
   const { locale } = await params;
-  return { title: versionDe(RETOURS_ECHANGES, locale).titre, alternates: alternatesDePage(locale, "/retours-echanges") };
+  const { titre, description } = versionDe(RETOURS_ECHANGES, locale);
+  const t = await getTranslations({ locale, namespace: "meta.site" });
+  return metadonneesDePage(locale, "/retours-echanges", {
+    titre,
+    description,
+    titreDePartage: `${titre} | ${NOM_DU_SITE}`,
+    descriptionDePartage: description,
+    image: { ...IMAGE_DU_SITE, alt: t("ogAlt") },
+  });
 }
 
 export default async function RetoursPage({ params }: Parametres) {

@@ -409,6 +409,12 @@
   "meta": {
     "siteName": "Guillaume Farré",
     "rootDescription": "Guillaume Farré — Canvases and Photographs.",
+    "site": {
+      "description": "Discover the unique artistic world of Guillaume Farré: abstract paintings created by the direct passage of the Dino over canvas, fine art photographs in limited series.",
+      "ogTitle": "Guillaume Farré - Artist",
+      "ogAlt": "Guillaume Farré — Canvases and Photographs",
+      "keywords": "Guillaume Farré, artist, Dino, abstract art, fine art photography, limited series, contemporary paintings"
+    },
     "histoire": {
       "title": "Story",
       "description": "The story of Guillaume Farré: from the little Ferrari no. 20 of his childhood to the Dino in his studio. Forty years of automotive passion turned into art.",
@@ -453,6 +459,7 @@
       "title": "Guillaume Farré — Login",
       "description": "Admin access to the Guillaume Farré website."
     },
+    "galerieItemTitle": "Photograph {numero}",
     "galerieItemFallbackDescription": "{title} — Fine art photograph by Guillaume Farré",
     "press": {
       "title": "Press",

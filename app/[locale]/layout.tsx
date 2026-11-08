@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { routing } from '@/i18n/routing';
@@ -9,75 +9,71 @@ import StructuredData from '@/components/StructuredData';
 import AdminWrapper from '@/components/admin/AdminWrapper';
 import ClientShell from '@/components/ClientShell';
 import { VERSIONS_DU_GABARIT } from '@/lib/adresses-de-page';
+import { carteTwitter } from '@/lib/carte-twitter';
+import { autresLocalesOpenGraph, IMAGE_DU_SITE, localeOpenGraph, NOM_DU_SITE } from '@/lib/metadonnees-de-page';
 import "./globals.css";
 
-// SEO - Décisions audit 2025-01-20
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://guillaumefarre.com'),
-  title: {
-    default: "Guillaume Farré",
-    template: "%s | Guillaume Farré",
-  },
-  description: "Guillaume Farré — Toiles et Photographies.",
-  keywords: ["Guillaume Farré", "artiste", "Dino", "art abstrait", "photographie d'art", "séries limitées", "tableaux contemporains"],
-  icons: {
-    icon: "/favicon.svg",
-  },
-  authors: [{ name: "Guillaume Farré" }],
-  creator: "Guillaume Farré",
-  publisher: "Guillaume Farré",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  openGraph: {
-    type: "website",
-    locale: "fr_FR",
-    alternateLocale: ["en_US", "it_IT"],
-    url: "https://guillaumefarre.com",
-    siteName: "Guillaume Farré",
-    title: "Guillaume Farré - Artiste",
-    description: "Découvrez l'univers artistique unique de Guillaume Farré : tableaux abstraits créés par le passage direct de la Dino sur toile, photographies d'art en séries limitées.",
-    images: [
-      {
-        url: "/images/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Guillaume Farré — Toiles et Photographies",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Guillaume Farré - Artiste",
-    description: "Découvrez l'univers artistique unique de Guillaume Farré : tableaux abstraits créés avec la Dino, photographies d'art en séries limitées.",
-    images: ["/images/og-image.jpg"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+// SEO - Décisions audit 2025-01-20. Les textes suivent la langue de la page (messages, meta.site) : les pages qui ne
+// déclarent pas les leurs les héritent. La carte de partage ne porte pas d'adresse, le gabarit ignorant le chemin.
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const langue = (routing.locales as readonly string[]).includes(locale) ? locale : routing.defaultLocale;
+  const t = await getTranslations({ locale: langue, namespace: "meta.site" });
+  const openGraph = {
+    type: "website" as const,
+    locale: localeOpenGraph(langue),
+    alternateLocale: autresLocalesOpenGraph(langue),
+    siteName: NOM_DU_SITE,
+    title: t("ogTitle"),
+    description: t("description"),
+    images: [{ ...IMAGE_DU_SITE, alt: t("ogAlt") }],
+  };
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://guillaumefarre.com'),
+    title: {
+      default: NOM_DU_SITE,
+      template: `%s | ${NOM_DU_SITE}`,
+    },
+    description: t("description"),
+    keywords: t("keywords").split(", "),
+    icons: {
+      icon: "/favicon.svg",
+    },
+    authors: [{ name: NOM_DU_SITE }],
+    creator: NOM_DU_SITE,
+    publisher: NOM_DU_SITE,
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    openGraph,
+    twitter: carteTwitter(openGraph),
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
-  },
-  // Aucun canonical ici : chaque page déclare le sien (lib/adresses-de-page.ts). Celui de la racine, hérité par toutes,
-  // désignait l'accueil comme l'original de chacune.
-  alternates: {
-    languages: { ...VERSIONS_DU_GABARIT },
-  },
-  verification: {
-    // Lalou: Codes a remplacer avec vrais codes depuis Google/Bing Search Console
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
-    other: {
-      bing: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
+    // Aucun canonical ici : chaque page déclare le sien (lib/adresses-de-page.ts). Celui de la racine, hérité par toutes,
+    // désignait l'accueil comme l'original de chacune.
+    alternates: {
+      languages: { ...VERSIONS_DU_GABARIT },
     },
-  },
-};
+    verification: {
+      // Lalou: Codes a remplacer avec vrais codes depuis Google/Bing Search Console
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+      other: {
+        bing: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
+      },
+    },
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

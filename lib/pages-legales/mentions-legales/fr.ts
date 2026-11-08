@@ -2,6 +2,8 @@ import type { DocumentLegal } from "../types";
 
 const mentionsLegales: DocumentLegal = {
   titre: "Mentions Légales",
+  description:
+    "Mentions légales du site guillaumefarre.com : éditeur du site, directeur de publication, hébergement, propriété intellectuelle et crédits photographiques.",
   sections: [
     {
       titre: "Éditeur du site",

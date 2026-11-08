@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Navigation from "@/components/navigation/Navigation";
-import { getWorksFromMetadata } from "@/lib/works";
-import { Link } from "@/i18n/routing";
+import { getWorksFromMetadata, type Work } from "@/lib/works";
+import { Link, routing } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
-import { carteTwitter } from "@/lib/carte-twitter";
-import { alternatesDePage } from "@/lib/adresses-de-page";
+import { metadonneesDePage } from "@/lib/metadonnees-de-page";
 import GalerieItemClient from "./GalerieItemClient";
 import { safeJsonLd } from "@/lib/safe-json-ld";
 import blurPlaceholders from "@/data/blur-placeholders.json";
@@ -35,29 +34,32 @@ export async function generateMetadata({
   }
 
   const t = await getTranslations({ locale, namespace: "meta" });
-  const fallback = t("galerieItemFallbackDescription", { title: work.title });
-  const description = work.description || fallback;
+  const titre = await titreDansLaLangue(work, locale);
+  // La description que portent les données est rédigée en français : les autres langues prennent la phrase générique
+  const description =
+    (locale === routing.defaultLocale && work.description) || t("galerieItemFallbackDescription", { title: titre });
 
-  const openGraph = {
-    title: work.title,
+  return metadonneesDePage(locale, `/galerie-item/${work.slug}`, {
+    titre,
     description,
-    images: [
-      {
-        url: work.images[0],
-        width: 1200,
-        height: 900,
-        alt: work.title,
-      },
-    ],
-    type: "website" as const,
-  };
-  return {
-    title: work.title,
-    description,
-    alternates: alternatesDePage(locale, `/galerie-item/${work.slug}`),
-    openGraph,
-    twitter: carteTwitter(openGraph),
-  };
+    titreDePartage: titre,
+    descriptionDePartage: description,
+    image: { url: work.images[0], width: 1200, height: 900, alt: titre },
+  });
+}
+
+/**
+ * Titre d'une œuvre dans la langue de la page. Une œuvre sans nom porte dans les données le titre générique français
+ * « Photographie 5 », que les métadonnées disent dans la langue de la page ; un vrai titre d'œuvre ne se traduit pas.
+ */
+async function titreDansLaLangue(work: Work, locale: string): Promise<string> {
+  const numero = work.slug.split("-").pop() ?? "";
+  const [dansLaLangue, enFrancais] = await Promise.all([
+    getTranslations({ locale, namespace: "meta" }),
+    getTranslations({ locale: routing.defaultLocale, namespace: "meta" }),
+  ]);
+  const generique = enFrancais("galerieItemTitle", { numero });
+  return work.title === generique ? dansLaLangue("galerieItemTitle", { numero }) : work.title;
 }
 
 export default async function GalerieItemPage({

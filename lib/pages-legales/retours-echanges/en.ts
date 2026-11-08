@@ -2,6 +2,8 @@ import type { PageRetours } from "../types";
 
 const retoursEchanges: PageRetours = {
   titre: "Returns & Exchanges",
+  description:
+    "Returns and exchanges on guillaumefarre.com: 14-day withdrawal period, conditions, return procedure, refund, exceptions and quality guarantee.",
   avertissement: [
     "This English translation is provided for information only. The ",
     { lien: "French version", vers: "/retours-echanges", langue: "fr" },

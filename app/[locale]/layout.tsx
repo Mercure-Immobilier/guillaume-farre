@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import StructuredData from '@/components/StructuredData';
 import AdminWrapper from '@/components/admin/AdminWrapper';
 import ClientShell from '@/components/ClientShell';
+import { VERSIONS_DU_GABARIT } from '@/lib/adresses-de-page';
 import "./globals.css";
 
 // SEO - Décisions audit 2025-01-20
@@ -64,14 +65,10 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  // Aucun canonical ici : chaque page déclare le sien (lib/adresses-de-page.ts). Celui de la racine, hérité par toutes,
+  // désignait l'accueil comme l'original de chacune.
   alternates: {
-    canonical: "https://guillaumefarre.com",
-    languages: {
-      'fr-FR': "https://guillaumefarre.com/fr",
-      'en-US': "https://guillaumefarre.com/en",
-      'it-IT': "https://guillaumefarre.com/it",
-      'x-default': "https://guillaumefarre.com/fr", // Lalou: Fallback pour hreflang
-    },
+    languages: { ...VERSIONS_DU_GABARIT },
   },
   verification: {
     // Lalou: Codes a remplacer avec vrais codes depuis Google/Bing Search Console

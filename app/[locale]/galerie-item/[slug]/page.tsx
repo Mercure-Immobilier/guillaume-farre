@@ -5,6 +5,7 @@ import { getWorksFromMetadata } from "@/lib/works";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { carteTwitter } from "@/lib/carte-twitter";
+import { alternatesDePage } from "@/lib/adresses-de-page";
 import GalerieItemClient from "./GalerieItemClient";
 import { safeJsonLd } from "@/lib/safe-json-ld";
 import blurPlaceholders from "@/data/blur-placeholders.json";
@@ -53,6 +54,7 @@ export async function generateMetadata({
   return {
     title: work.title,
     description,
+    alternates: alternatesDePage(locale, `/galerie-item/${work.slug}`),
     openGraph,
     twitter: carteTwitter(openGraph),
   };

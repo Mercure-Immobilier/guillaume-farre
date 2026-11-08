@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesDePage } from "@/lib/adresses-de-page";
 import DocumentLegal, { HABILLAGE_GRIS } from "@/components/pages-legales/DocumentLegal";
 import { MENTIONS_LEGALES, versionDe } from "@/lib/pages-legales";
 
@@ -10,7 +11,7 @@ interface Parametres {
 
 export async function generateMetadata({ params }: Parametres): Promise<Metadata> {
   const { locale } = await params;
-  return { title: versionDe(MENTIONS_LEGALES, locale).titre };
+  return { title: versionDe(MENTIONS_LEGALES, locale).titre, alternates: alternatesDePage(locale, "/mentions-legales") };
 }
 
 export default async function MentionsLegalesPage({ params }: Parametres) {

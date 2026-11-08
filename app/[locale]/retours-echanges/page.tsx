@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { alternatesDePage } from "@/lib/adresses-de-page";
 import RetoursEchanges from "@/components/pages-legales/RetoursEchanges";
 import { RETOURS_ECHANGES, versionDe } from "@/lib/pages-legales";
 
@@ -10,7 +11,7 @@ interface Parametres {
 
 export async function generateMetadata({ params }: Parametres): Promise<Metadata> {
   const { locale } = await params;
-  return { title: versionDe(RETOURS_ECHANGES, locale).titre };
+  return { title: versionDe(RETOURS_ECHANGES, locale).titre, alternates: alternatesDePage(locale, "/retours-echanges") };
 }
 
 export default async function RetoursPage({ params }: Parametres) {

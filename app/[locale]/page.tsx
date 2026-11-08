@@ -8,8 +8,15 @@ import { getPageImages } from "@/lib/page-images";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import blurPlaceholders from "@/data/blur-placeholders.json";
+import { alternatesDePage } from "@/lib/adresses-de-page";
+import type { Metadata } from "next";
 
 const BLUR = blurPlaceholders as Record<string, string>;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return { alternates: alternatesDePage(locale, "") };
+}
 
 export default async function HomePage() {
   const t = await getTranslations("home");

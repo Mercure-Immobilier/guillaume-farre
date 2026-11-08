@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { carteTwitter } from '@/lib/carte-twitter';
+import { alternatesDePage } from '@/lib/adresses-de-page';
 import Navigation from '@/components/navigation/Navigation';
 import { GalerieContent } from '@/components/galerie/GalerieContent';
 
@@ -19,6 +20,7 @@ export async function generateMetadata({
   return {
     title: t('title'),
     description: t('description'),
+    alternates: alternatesDePage(locale, '/galerie'),
     openGraph,
     twitter: carteTwitter(openGraph),
   };

@@ -155,9 +155,9 @@ describe("canonical", () => {
 });
 
 describe("versions linguistiques", () => {
-  it.each(ADRESSES)("$adresse déclare quatre versions, x-default compris", async (adresse) => {
+  it.each(ADRESSES)("$adresse déclare la même page dans chaque langue, x-default compris", async (adresse) => {
     const versions = versionsDe(await metadonneesDe(adresse));
-    expect(Object.keys(versions)).toHaveLength(4);
-    expect(versions["x-default"]).toBeDefined();
+    const page = (langue: string) => `${ORIGINE_DE_PRODUCTION}/${langue}${adresse.chemin}`;
+    expect(versions).toEqual({ fr: page("fr"), en: page("en"), it: page("it"), "x-default": page("fr") });
   });
 });

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { routing } from "@/i18n/routing";
 
 /**
  * Adresse canonique et versions linguistiques d'une page publique.
@@ -8,7 +9,10 @@ import type { Metadata } from "next";
  * restent relatives : le metadataBase du gabarit les complète avec l'origine que reprend le plan du site.
  */
 
-/** Versions linguistiques déclarées par le gabarit, reprises telles quelles par les pages qui déclarent leur canonical */
+/**
+ * Versions linguistiques déclarées par le gabarit, celles de l'accueil. Elles ne valent que pour les pages hors du
+ * plan du site qui ne déclarent pas les leurs.
+ */
 export const VERSIONS_DU_GABARIT = {
   "fr-FR": "/fr",
   "en-US": "/en",
@@ -21,10 +25,16 @@ export function adresseDePage(langue: string, chemin: string): string {
   return `/${langue}${chemin}`;
 }
 
-/** Bloc alternates d'une page : sa propre adresse pour canonical, avec ses versions linguistiques */
+/**
+ * Bloc alternates d'une page : sa propre adresse pour canonical, avec l'adresse de la même page dans chaque langue.
+ * x-default désigne la version française, langue par défaut du site.
+ */
 export function alternatesDePage(langue: string, chemin: string): NonNullable<Metadata["alternates"]> {
   return {
     canonical: adresseDePage(langue, chemin),
-    languages: { ...VERSIONS_DU_GABARIT },
+    languages: {
+      ...Object.fromEntries(routing.locales.map((version) => [version, adresseDePage(version, chemin)])),
+      "x-default": adresseDePage(routing.defaultLocale, chemin),
+    },
   };
 }
